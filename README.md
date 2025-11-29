@@ -51,3 +51,7 @@
 ### Установка зависимостей
 
 npm install
+
+## Netlify
+
+- https://messengeryaandryun.netlify.app/

@@ -1,0 +1,24 @@
+<div class="avatar-upload">
+  <div class="avatar-upload__selector">
+    {{#if fileName}}
+      <span class="avatar-upload__file-name">{{fileName}}</span>
+    {{else}}
+      <a href="#" class="avatar-upload__link" id="fileSelectLink">Выбрать файл на компьютере</a>
+    {{/if}}
+  </div>
+  
+  {{#if validationError}}
+    <span class="avatar-upload__error">{{validationError}}</span>
+  {{/if}}
+  
+  <input 
+    type="file" 
+    class="avatar-upload__input" 
+    id="fileInput"
+    accept="image/*"
+  />
+  
+  <div class="avatar-upload__actions">
+    {{> button text="Поменять" type="button" variant="primary"}}
+  </div>
+</div>

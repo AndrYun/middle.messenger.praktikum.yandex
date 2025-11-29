@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход</title>
+</head>
+<body>
+  <main class="login-page">
+    <div class="login-page__container">
+      <h1 class="login-page__title">Вход</h1>
+      
+      <form class="login-page__form">
+        {{> input label="Логин" type="text" name="login" placeholder="ivanivanov" value="ivanivanov"}}
+        
+        {{> input label="Пароль" type="password" name="password" placeholder="••••••••••••"}}
+        
+        <div class="login-page__actions">
+          {{> button text="Авторизоваться" type="submit" variant="primary"}}
+        </div>
+        
+        <a href="#register" class="login-page__link">Sign up</a>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

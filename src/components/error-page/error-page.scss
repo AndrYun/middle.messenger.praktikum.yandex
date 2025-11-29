@@ -1,0 +1,40 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.error-page {
+  @include flex-center;
+  min-height: 100vh;
+  background-color: $color-background;
+
+  &__content {
+    @include flex-column($spacing-xl);
+    align-items: center;
+    text-align: center;
+  }
+
+  &__code {
+    font-size: 120px;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+    margin: 0;
+    line-height: 1;
+  }
+
+  &__message {
+    font-size: $font-size-lg;
+    color: $color-text-primary;
+    margin: 0;
+  }
+
+  &__link {
+    color: $color-primary;
+    text-decoration: none;
+    font-size: $font-size-md;
+    transition: color $transition-base;
+
+    &:hover {
+      text-decoration: underline;
+      color: $color-primary-hover;
+    }
+  }
+}

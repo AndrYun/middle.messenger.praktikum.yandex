@@ -1,0 +1,67 @@
+<div class="chat-page">
+  <!-- Левая колонка - список чатов -->
+  <aside class="chat-page__sidebar">
+    <div class="chat-page__sidebar-header">
+      <a href="#profile" class="chat-page__profile-link">Профиль →</a>
+    </div>
+    
+    <div class="chat-page__search">
+      <input type="text" placeholder="Поиск" class="chat-page__search-input">
+    </div>
+    
+    <nav class="chat-page__chats">
+      {{#each chats}}
+        {{> chat-item 
+          id=id 
+          name=name 
+          lastMessage=lastMessage 
+          time=time 
+          unreadCount=unreadCount 
+          active=active
+          isYou=isYou
+        }}
+      {{/each}}
+    </nav>
+  </aside>
+
+  <!-- Правая колонка - переписка -->
+  <main class="chat-page__content">
+    {{#if selectedChat}}
+      {{> chat-header name=selectedChat.name}}
+      
+      {{> chat-menu}}
+      
+      <div class="chat-page__messages">
+        <div class="chat-page__date">19 июня</div>
+        
+        {{#each selectedChat.messages}}
+          {{> message text=text time=time isMy=isMy image=image}}
+        {{/each}}
+      </div>
+      
+      <form class="chat-page__input-wrapper">
+        {{> message-input}}
+      </form>
+    {{else}}
+      <!-- Пустое состояние -->
+      <div class="chat-page__empty">
+        <p>Выберите чат чтобы отправить сообщение</p>
+      </div>
+    {{/if}}
+  </main>
+
+  <div class="modal" id="addUserModal">
+    <div class="modal__overlay"></div>
+    <div class="modal__content">
+      <h2 class="modal__title">Добавить пользователя</h2>
+      <div class="modal__body">
+        <form class="add-user-form">
+          {{> input label="Логин" type="text" name="login" placeholder="ivanivanov" value="ivanivanov"}}
+          <div class="add-user-form__actions">
+            {{> button text="Добавить" type="submit" variant="primary"}}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

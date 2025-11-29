@@ -1,0 +1,68 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.profile-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: $color-background;
+
+  &__sidebar {
+    width: 80px;
+    background-color: $color-white;
+    padding: $spacing-lg;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  &__back {
+    cursor: pointer;
+    display: flex;
+    transition: transform $transition-base;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &__content {
+    flex: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: $spacing-xl * 2 $spacing-xl;
+  }
+
+  &__avatar {
+    @include flex-column($spacing-md);
+    align-items: center;
+    margin-bottom: $spacing-xl * 2;
+  }
+
+  &__avatar-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background-color: #efefef;
+    @include flex-center;
+    cursor: pointer;
+    transition: opacity $transition-base;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &__name {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  &__fields {
+    margin-bottom: $spacing-xl;
+  }
+
+  &__actions {
+    @include flex-column($spacing-sm);
+    padding-top: $spacing-lg;
+  }
+}

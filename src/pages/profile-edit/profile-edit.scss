@@ -1,0 +1,12 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.profile-page {
+  &__form {
+    @include flex-column($spacing-lg);
+  }
+
+  &__form-actions {
+    margin-top: $spacing-md;
+  }
+}

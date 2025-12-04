@@ -1,0 +1,21 @@
+@use '../../styles/variables' as *;
+
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md 0;
+  border-bottom: 1px solid $color-border;
+
+  &__label {
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+  }
+
+  &__value {
+    font-size: $font-size-base;
+    color: $color-text-secondary;
+    text-align: right;
+  }
+}

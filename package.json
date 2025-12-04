@@ -1,0 +1,26 @@
+{
+  "name": "middle.messenger.praktikum.yandex",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3000",
+    "build": "tsc && vite build",
+    "start": "npm run build && vite preview --port 3000",
+    "preview": "vite preview --port 3000"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "@types/handlebars": "^4.1.0",
+    "@types/node": "^22.0.0",
+    "sass": "^1.70.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8"
+  }
+}

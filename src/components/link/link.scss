@@ -1,0 +1,30 @@
+@use '../../styles/variables' as *;
+@use 'sass:color';
+
+.link {
+  display: block;
+  text-align: center;
+  font-size: $font-size-base;
+  text-decoration: none;
+  transition: all $transition-base;
+  cursor: pointer;
+  padding: $spacing-sm 0;
+
+  &--primary {
+    color: $color-primary;
+
+    &:hover {
+      text-decoration: underline;
+      color: $color-primary-hover;
+    }
+  }
+
+  &--danger {
+    color: $color-error;
+
+    &:hover {
+      text-decoration: underline;
+      color: color.adjust($color-error, $lightness: -10%, $space: hsl);
+    }
+  }
+}

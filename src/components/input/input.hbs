@@ -1,0 +1,15 @@
+<div class="input-wrapper">
+  {{#if label}}
+    <label class="input-wrapper__label">{{label}}</label>
+  {{/if}}
+  <input 
+    type="{{type}}" 
+    name="{{name}}"
+    placeholder="{{placeholder}}"
+    value="{{value}}"
+    class="input-wrapper__input {{#if error}}input-wrapper__input--error{{/if}}"
+  />
+  {{#if error}}
+    <span class="input-wrapper__error">{{error}}</span>
+  {{/if}}
+</div>

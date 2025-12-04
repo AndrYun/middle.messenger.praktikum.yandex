@@ -1,0 +1,46 @@
+@use '../../styles/variables' as *;
+
+.message {
+  display: flex;
+  margin-bottom: $spacing-md;
+
+  &--my {
+    justify-content: flex-end;
+
+    .message__content {
+      background-color: #e3edff;
+    }
+
+    .message__time {
+      text-align: right;
+    }
+  }
+
+  &__content {
+    background-color: #f8f8f8;
+    border-radius: $border-radius-md;
+    padding: $spacing-sm $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  &__image {
+    max-width: 100%;
+    border-radius: $border-radius-sm;
+  }
+
+  &__text {
+    font-size: $font-size-base;
+    color: $color-text-primary;
+    line-height: 1.5;
+    word-wrap: break-word;
+    margin: 0;
+  }
+
+  &__time {
+    font-size: 11px;
+    color: $color-text-secondary;
+    align-self: flex-end;
+  }
+}

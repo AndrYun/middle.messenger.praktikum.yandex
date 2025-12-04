@@ -1,0 +1,47 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.register-page {
+  @include flex-center;
+  min-height: 100vh;
+  background-color: $color-background;
+
+  &__container {
+    width: 100%;
+    max-width: 400px;
+    padding: $spacing-xl;
+    background-color: $color-white;
+    border-radius: $border-radius-md;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  &__title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    text-align: center;
+    margin-bottom: $spacing-xl;
+    color: $color-text-primary;
+  }
+
+  &__form {
+    @include flex-column($spacing-xs);
+  }
+
+  &__actions {
+    margin-top: $spacing-md;
+  }
+
+  &__link {
+    display: block;
+    text-align: center;
+    color: $color-primary;
+    text-decoration: none;
+    font-size: $font-size-base;
+    transition: color $transition-base;
+
+    &:hover {
+      text-decoration: underline;
+      color: $color-primary-hover;
+    }
+  }
+}

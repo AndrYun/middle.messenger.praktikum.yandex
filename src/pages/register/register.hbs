@@ -1,27 +1,20 @@
-<main class="register-page">
-  <div class="register-page__container">
-    <h1 class="register-page__title">Register</h1>
-    
-    <form class="register-page__form">
-      {{> input label="Почта" type="email" name="email" placeholder="pochta@yandex.ru"}}
-      
-      {{> input label="Логин" type="text" name="login" placeholder="ivanivanov" }}
-      
-      {{> input label="Имя" type="text" name="first_name" placeholder="Иван"}}
-      
-      {{> input label="Фамилия" type="text" name="second_name" placeholder="Иванов"}}
-      
-      {{> input label="Телефон" type="tel" name="phone" placeholder="+7 (909) 967 30 30"}}
-      
-      {{> input label="Пароль" type="password" name="password" placeholder="••••••••••••"}}
-      
-      {{> input label="Пароль (ещё раз)" type="password" name="password_confirm" placeholder="••••••••••••" error="Пароли не совпадают"}}
-      
-      <div class="register-page__actions">
-        {{> button text="Create account" type="submit" variant="primary"}}
+<main class='register-page'>
+  <div class='register-page__container'>
+    <h1 class='register-page__title'>Регистрация</h1>
+
+    <form class='register-page__form'>
+      <div data-id='emailInput'></div>
+      <div data-id='loginInput'></div>
+      <div data-id='firstNameInput'></div>
+      <div data-id='secondNameInput'></div>
+      <div data-id='phoneInput'></div>
+      <div data-id='passwordInput'></div>
+
+      <div class='register-page__actions'>
+        <div data-id='submitButton'></div>
       </div>
-      
-      <a href="#login" class="register-page__link">Sign in</a>
+
+      <div data-id='loginLink'></div>
     </form>
   </div>
 </main>

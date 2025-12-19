@@ -2,45 +2,49 @@
 
 .message {
   display: flex;
-  margin-bottom: $spacing-md;
+  flex-direction: column;
+  margin-bottom: $spacing-lg;
 
   &--my {
-    justify-content: flex-end;
+    align-self: flex-end;
+    align-items: flex-end;
 
     .message__content {
       background-color: #e3edff;
     }
+  }
 
-    .message__time {
-      text-align: right;
+  &:not(&--my) {
+    align-self: flex-start;
+    align-items: flex-start;
+
+    .message__content {
+      background-color: #f8f8f8;
     }
   }
 
   &__content {
-    background-color: #f8f8f8;
     border-radius: $border-radius-md;
     padding: $spacing-sm $spacing-md;
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-xs;
+    word-wrap: break-word;
   }
 
   &__image {
     max-width: 100%;
     border-radius: $border-radius-sm;
+    display: block;
   }
 
   &__text {
     font-size: $font-size-base;
     color: $color-text-primary;
     line-height: 1.5;
-    word-wrap: break-word;
     margin: 0;
   }
 
   &__time {
     font-size: 11px;
     color: $color-text-secondary;
-    align-self: flex-end;
+    margin-top: 4px;
   }
 }

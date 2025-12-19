@@ -12,7 +12,7 @@
   &__user {
     display: flex;
     align-items: center;
-    gap: $spacing-sm;
+    gap: $spacing-md;
   }
 
   &__avatar {
@@ -20,14 +20,18 @@
   }
 
   &__name {
-    font-weight: $font-weight-semibold;
+    font-weight: $font-weight-medium;
     font-size: $font-size-md;
     color: $color-text-primary;
   }
 
   &__menu {
     @include button-reset;
-    padding: $spacing-xs;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     transition: background-color $transition-base;
 

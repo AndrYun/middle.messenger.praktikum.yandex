@@ -38,6 +38,7 @@
   }
 
   &__avatar-circle {
+    position: relative;
     width: 130px;
     height: 130px;
     border-radius: 50%;
@@ -45,9 +46,29 @@
     @include flex-center;
     cursor: pointer;
     transition: opacity $transition-base;
+    overflow: hidden;
 
-    &:hover {
-      opacity: 0.8;
+    &:hover .profile-page__avatar-overlay {
+      opacity: 1;
+    }
+  }
+
+  &__avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    @include flex-center;
+    opacity: 0;
+    transition: opacity $transition-base;
+
+    span {
+      color: $color-white;
+      font-size: $font-size-sm;
+      text-align: center;
+      line-height: 1.4;
     }
   }
 
@@ -55,6 +76,7 @@
     font-size: $font-size-md;
     font-weight: $font-weight-semibold;
     color: $color-text-primary;
+    margin: 0;
   }
 
   &__fields {

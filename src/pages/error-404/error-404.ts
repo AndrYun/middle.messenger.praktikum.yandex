@@ -13,7 +13,7 @@ export class Error404Page extends Block<Error404PageProps> {
         variant: 'primary',
         onClick: (e) => {
           e.preventDefault();
-          (window as any).navigateTo('login');
+          window.navigateTo('login');
         },
       }),
     });

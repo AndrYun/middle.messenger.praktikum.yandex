@@ -57,7 +57,7 @@ export class RegisterPage extends Block<RegisterPageProps> {
         variant: 'primary',
         onClick: (e) => {
           e.preventDefault();
-          (window as any).navigateTo('login');
+          window.navigateTo('login');
         },
       }),
     });

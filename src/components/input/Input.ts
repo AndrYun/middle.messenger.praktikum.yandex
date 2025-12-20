@@ -9,7 +9,7 @@ export class Input extends Block<InputProps> {
       ...props,
       events: {
         input: (e: Event) => this.handleInput(e),
-        focus: (e: Event) => this.handleFocus(e),
+        focus: () => this.handleFocus(),
         blur: (e: Event) => this.handleBlur(e),
       },
     });
@@ -27,7 +27,7 @@ export class Input extends Block<InputProps> {
     }
   }
 
-  private handleFocus(e: Event): void {
+  private handleFocus(): void {
     if (this.props.onFocus) {
       this.props.onFocus();
     }

@@ -78,7 +78,7 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
 
     if (target.closest('.profile-page__back')) {
       e.preventDefault();
-      (window as any).navigateTo('profile');
+      window.navigateTo('profile');
     }
   }
 
@@ -123,7 +123,7 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
       this.props.onSubmit(data);
     } else {
       alert('Данные сохранены!');
-      (window as any).navigateTo('profile');
+      window.navigateTo('profile');
     }
   }
 

@@ -3,7 +3,6 @@ import type { MessageInputProps } from './types';
 import { validateField } from '../../utils/validation';
 import template from './message-input.hbs?raw';
 
-
 export class MessageInput extends Block<MessageInputProps> {
   constructor(props: MessageInputProps) {
     super('div', {
@@ -18,7 +17,7 @@ export class MessageInput extends Block<MessageInputProps> {
 
   private handleClick(e: Event): void {
     const target = e.target as HTMLElement;
-    
+
     if (target.closest('.message-input__attach')) {
       e.preventDefault();
       if (this.props.onAttach) {
@@ -35,7 +34,7 @@ export class MessageInput extends Block<MessageInputProps> {
 
     // валидация
     const error = validateField('message', message || '');
-    
+
     if (error) {
       console.error('Validation error:', error);
       return;

@@ -4,6 +4,7 @@
 
 .button {
   @include button-reset;
+
   width: 100%;
   padding: $spacing-sm + 2px;
   border-radius: $border-radius-sm;

@@ -71,7 +71,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
         variant: 'primary',
         onClick: (e) => {
           e.preventDefault();
-          (window as any).navigateTo('profile-edit');
+          window.navigateTo('profile-edit');
         },
       }),
       passwordLink: new Link({
@@ -80,7 +80,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
         variant: 'primary',
         onClick: (e) => {
           e.preventDefault();
-          (window as any).navigateTo('profile-password');
+          window.navigateTo('profile-password');
         },
       }),
       logoutLink: new Link({
@@ -92,7 +92,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
           if (props.onLogout) {
             props.onLogout();
           } else {
-            (window as any).navigateTo('login');
+            window.navigateTo('login');
           }
         },
       }),
@@ -108,7 +108,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
     // вернуться
     if (target.closest('.profile-page__back')) {
       e.preventDefault();
-      (window as any).navigateTo('login');
+      window.navigateTo('login');
       return;
     }
 

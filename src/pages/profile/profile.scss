@@ -33,6 +33,7 @@
 
   &__avatar {
     @include flex-column($spacing-md);
+
     align-items: center;
     margin-bottom: $spacing-xl * 2;
   }
@@ -43,7 +44,9 @@
     height: 130px;
     border-radius: 50%;
     background-color: #efefef;
+
     @include flex-center;
+
     cursor: pointer;
     transition: opacity $transition-base;
     overflow: hidden;
@@ -55,12 +58,11 @@
 
   &__avatar-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
+
     @include flex-center;
+
     opacity: 0;
     transition: opacity $transition-base;
 
@@ -85,6 +87,7 @@
 
   &__actions {
     @include flex-column($spacing-sm);
+
     padding-top: $spacing-lg;
   }
 }

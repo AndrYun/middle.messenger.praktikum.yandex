@@ -8,8 +8,8 @@ export class ChatHeader extends Block<ChatHeaderProps> {
     super('div', {
       ...props,
       avatar:
-        props.avatar ||
-        new Avatar({
+        props.avatar
+        || new Avatar({
           size: 'small',
           alt: props.name,
         }),

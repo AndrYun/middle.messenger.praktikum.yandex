@@ -48,7 +48,7 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
 
     if (target.closest('.profile-page__back')) {
       e.preventDefault();
-      (window as any).navigateTo('profile');
+      window.navigateTo('profile');
     }
   }
 
@@ -91,7 +91,7 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
       this.props.onSubmit(data);
     } else {
       alert('Пароль изменен!');
-      (window as any).navigateTo('profile');
+      window.navigateTo('profile');
     }
   }
 

@@ -158,7 +158,7 @@ export function validateField(name: string, value: string): string | null {
 Валидировать форму целиком
  */
 export function validateForm(
-  data: Record<string, string>
+  data: Record<string, string>,
 ): Record<string, string> {
   const errors: Record<string, string> = {};
 

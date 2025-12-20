@@ -3,11 +3,13 @@
 
 .error-page {
   @include flex-center;
+
   min-height: 100vh;
   background-color: $color-background;
 
   &__content {
     @include flex-column($spacing-xl);
+
     align-items: center;
     text-align: center;
   }

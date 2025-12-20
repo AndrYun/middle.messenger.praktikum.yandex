@@ -9,12 +9,12 @@ export class Avatar extends Block<AvatarProps> {
       size: props.size || 'medium',
       events: props.onClick
         ? {
-            click: () => {
-              if (props.onClick) {
-                props.onClick();
-              }
-            },
-          }
+          click: () => {
+            if (props.onClick) {
+              props.onClick();
+            }
+          },
+        }
         : {},
     });
   }

@@ -55,3 +55,55 @@ npm install
 ## Netlify
 
 - https://messengeryaandryun.netlify.app/
+
+### Реализация Блоков
+
+- init - инициализация компонента
+- componentDidMount - компонент добавлен в DOM
+- componentDidUpdate - props изменились
+- render - рендеринг шаблона
+
+### Особенности:
+
+- Реактивность - автоматическое обновление при изменении props через Proxy
+- Композиция - компоненты могут содержать другие компоненты
+- События - обработка через EventBus
+- TypeScript - полная типизация props
+
+### EventBus
+
+Паттерн **Observer** для работы с событиями:
+
+### ESLint
+
+- Базируется на `eslint:recommended` и `@typescript-eslint`
+- Проверяет TypeScript код
+- Запуск: `npm run lint:ts`
+- Автофикс: `npm run lint:ts:fix`
+
+### Stylelint
+
+- Базируется на `stylelint-config-standard-scss`
+- Проверяет SCSS код
+- Запуск: `npm run lint:style`
+- Автофикс: `npm run lint:style:fix`
+
+### HTTPTransport
+
+Класс для работы с API (готов к использованию в спринте 3):
+
+### Для просмотра страницы:
+
+1. Откройте приложение в браузере
+2. Нажмите `F12` для открытия консоли
+3. Введите команду: `navigateTo('chat')`
+4. Нажмите `Enter`
+
+### Страницы
+
+- 'login'
+- 'register'
+- 'profile'
+- 'profile-edit'
+- 'profile-password'
+- 'chat'

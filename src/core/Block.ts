@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars';
-import { EventBus } from './EventBus';
 import { nanoid } from 'nanoid';
+import { EventBus } from './EventBus';
 
 // События жизненного цикла компонента
 export enum BlockEvents {
@@ -57,8 +57,8 @@ export abstract class Block<P extends BlockProps = BlockProps> {
       if (value instanceof Block) {
         children[key] = value;
       } else if (
-        Array.isArray(value) &&
-        value.every((item) => item instanceof Block)
+        Array.isArray(value)
+        && value.every((item) => item instanceof Block)
       ) {
         children[key] = value;
       } else if (Array.isArray(value)) {
@@ -77,6 +77,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
+
   // DOM
   private _createResources(): void {
     const { tagName } = this._meta;
@@ -118,7 +119,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
   }
 
   // переопределение апдейта
-  protected componentDidUpdate(oldProps: P, newProps: P): boolean {
+  protected componentDidUpdate(_oldProps: P, _newProps: P): boolean {
     return true;
   }
 
@@ -158,7 +159,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
 
     const template = Handlebars.compile(block);
     const fragment = this._createDocumentElement(
-      'template'
+      'template',
     ) as HTMLTemplateElement;
     fragment.innerHTML = template({ ...this.props, ...this.lists });
 

@@ -13,7 +13,7 @@ export class Error500Page extends Block<Error500PageProps> {
         variant: 'primary',
         onClick: (e) => {
           e.preventDefault();
-          (window as any).navigateTo('login');
+          window.navigateTo('login');
         },
       }),
     });

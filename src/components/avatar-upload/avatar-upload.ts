@@ -28,13 +28,13 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
     if (target.classList.contains('avatar-upload__link')) {
       e.preventDefault();
       const input = this.element?.querySelector(
-        '.avatar-upload__input'
+        '.avatar-upload__input',
       ) as HTMLInputElement;
       input?.click();
     }
   }
 
-  //Обработчик выбора файла
+  // Обработчик выбора файла
   private handleFileChange(e: Event): void {
     const target = e.target as HTMLInputElement;
     const file = target.files?.[0];
@@ -94,7 +94,7 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
   public reset(): void {
     this.selectedFile = null;
     const input = this.element?.querySelector(
-      '.avatar-upload__input'
+      '.avatar-upload__input',
     ) as HTMLInputElement;
     if (input) {
       input.value = '';

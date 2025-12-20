@@ -37,6 +37,7 @@
 
   &__search-input {
     @include input-reset;
+
     width: 100%;
     padding: $spacing-sm $spacing-md;
     background-color: #f4f4f5;
@@ -65,7 +66,7 @@
     flex: 1;
     overflow-y: auto;
     padding: $spacing-lg;
-    background-color: #ffffff;
+    background-color: #fff;
     display: flex;
     flex-direction: column;
   }
@@ -80,6 +81,7 @@
 
   &__empty {
     @include flex-center;
+
     height: 100%;
 
     p {

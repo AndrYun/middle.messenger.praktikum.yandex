@@ -16,10 +16,10 @@ export class ChatMenu extends Block<ChatMenuProps> {
   private handleClick(e: Event): void {
     const target = e.target as HTMLElement;
     const button = target.closest('button[data-action]') as HTMLButtonElement;
-    
+
     if (!button) return;
 
-    const action = button.dataset.action;
+    const { action } = button.dataset;
 
     if (action === 'add' && this.props.onAddUser) {
       this.props.onAddUser();
@@ -28,7 +28,6 @@ export class ChatMenu extends Block<ChatMenuProps> {
     }
   }
 
-  
   public open(): void {
     this.setProps({ isOpen: true });
   }

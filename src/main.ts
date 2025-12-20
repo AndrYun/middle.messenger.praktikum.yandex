@@ -30,8 +30,6 @@ import { Error404Page } from './pages/error-404';
 import { Error500Page } from './pages/error-500';
 import { ChatPage } from './pages/chat';
 
-let currentPage: Block | null = null;
-
 // Функция для рендера компонента в DOM
 function render(page: Block): void {
   const root = document.querySelector('#app');
@@ -40,18 +38,14 @@ function render(page: Block): void {
     throw new Error('Элемент #app не найден');
   }
 
-  // Удаляем предыдущую страницу
   root.innerHTML = '';
 
-  // Рендерим новую
   const content = page.getContent();
   if (content) {
     root.appendChild(content);
   }
 
   page.dispatchComponentDidMount();
-
-  currentPage = page;
 }
 
 function navigateTo(pageName: string): void {
@@ -156,6 +150,6 @@ function navigateTo(pageName: string): void {
   render(page);
 }
 
-(window as any).navigateTo = navigateTo;
+window.navigateTo = navigateTo;
 
 navigateTo('login');

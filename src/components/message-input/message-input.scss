@@ -11,6 +11,7 @@
 
   &__attach {
     @include button-reset;
+
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -32,6 +33,7 @@
 
   &__field {
     @include input-reset;
+
     flex: 1;
     padding: $spacing-sm $spacing-md;
     border: none;
@@ -49,6 +51,7 @@
 
   &__submit {
     @include button-reset;
+
     flex-shrink: 0;
     display: flex;
     align-items: center;

@@ -1,18 +1,18 @@
-import { Block } from '../../core';
-import { Button } from '../button';
-import type { AvatarUploadProps } from './types';
-import template from './avatar-upload.hbs?raw';
+import { Block } from "../../core";
+import { Button } from "../button";
+import type { AvatarUploadProps } from "./types";
+import template from "./avatar-upload.hbs?raw";
 
 export class AvatarUpload extends Block<AvatarUploadProps> {
   private selectedFile: File | null = null;
 
   constructor(props: AvatarUploadProps) {
-    super('div', {
+    super("div", {
       ...props,
       submitButton: new Button({
-        text: 'Поменять',
-        type: 'button',
-        variant: 'primary',
+        text: "Поменять",
+        type: "button",
+        variant: "primary",
         onClick: () => this.handleSubmit(),
       }),
       events: {
@@ -23,29 +23,39 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
   }
 
   private handleClick(e: Event): void {
-    const target = e.target as HTMLElement;
+    const target = e.target;
 
-    if (target.classList.contains('avatar-upload__link')) {
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (target.classList.contains("avatar-upload__link")) {
       e.preventDefault();
-      const input = this.element?.querySelector(
-        '.avatar-upload__input',
-      ) as HTMLInputElement;
-      input?.click();
+      const input = this.element?.querySelector(".avatar-upload__input");
+
+      if (input instanceof HTMLInputElement) {
+        input.click();
+      }
     }
   }
 
   // Обработчик выбора файла
   private handleFileChange(e: Event): void {
-    const target = e.target as HTMLInputElement;
+    const target = e.target;
+
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+
     const file = target.files?.[0];
 
     if (file) {
       this.selectedFile = file;
 
       // Валидация типа файла
-      if (!file.type.startsWith('image/')) {
+      if (!file.type.startsWith("image/")) {
         this.setProps({
-          error: 'Можно загружать только изображения',
+          error: "Можно загружать только изображения",
           fileName: undefined,
         });
         return;
@@ -55,7 +65,7 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         this.setProps({
-          error: 'Размер файла не должен превышать 5MB',
+          error: "Размер файла не должен превышать 5MB",
           fileName: undefined,
         });
         return;
@@ -75,12 +85,12 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
 
   private handleSubmit(): void {
     if (!this.selectedFile) {
-      this.setProps({ error: 'Нужно выбрать файл' });
+      this.setProps({ error: "Нужно выбрать файл" });
       return;
     }
 
     // пока просто выводим в консоль
-    console.log('Uploading file:', this.selectedFile.name);
+    console.log("Uploading file:", this.selectedFile.name);
 
     alert(`Файл ${this.selectedFile.name} готов к загрузке`);
   }
@@ -93,12 +103,12 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
   // сборос выбора файла
   public reset(): void {
     this.selectedFile = null;
-    const input = this.element?.querySelector(
-      '.avatar-upload__input',
-    ) as HTMLInputElement;
-    if (input) {
-      input.value = '';
+    const input = this.element?.querySelector(".avatar-upload__input");
+
+    if (input instanceof HTMLInputElement) {
+      input.value = "";
     }
+
     this.setProps({
       fileName: undefined,
       error: undefined,

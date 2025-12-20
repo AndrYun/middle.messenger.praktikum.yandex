@@ -1,4 +1,4 @@
-@use '../../styles/variables' as *;
+@use "../../styles/variables" as *;
 
 .message {
   display: flex;
@@ -10,7 +10,7 @@
     align-items: flex-end;
 
     .message__content {
-      background-color: #e3edff;
+      background-color: $color-message-content;
     }
   }
 
@@ -19,7 +19,7 @@
     align-items: flex-start;
 
     .message__content {
-      background-color: #f8f8f8;
+      background-color: $color-message-content-not-my;
     }
   }
 

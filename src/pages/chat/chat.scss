@@ -1,5 +1,5 @@
-@use '../../styles/variables' as *;
-@use '../../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .chat-page {
   display: flex;
@@ -40,7 +40,7 @@
 
     width: 100%;
     padding: $spacing-sm $spacing-md;
-    background-color: #f4f4f5;
+    background-color: $color-chat-item;
     border-radius: $border-radius-sm;
     font-size: $font-size-sm;
 

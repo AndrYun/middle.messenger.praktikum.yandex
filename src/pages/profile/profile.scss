@@ -1,5 +1,5 @@
-@use '../../styles/variables' as *;
-@use '../../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .profile-page {
   display: flex;
@@ -43,7 +43,7 @@
     width: 130px;
     height: 130px;
     border-radius: 50%;
-    background-color: #efefef;
+    background-color: $color-avatar;
 
     @include flex-center;
 

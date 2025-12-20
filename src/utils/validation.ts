@@ -4,6 +4,13 @@ export interface ValidationRules {
   [key: string]: ValidationRule;
 }
 
+const VALIDATION_REGEX = {
+  NAME: /^[A-ZА-ЯЁ][a-zA-Zа-яёА-ЯЁ-]*$/,
+  LOGIN: /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/,
+  EMAIL: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+  PHONE: /^\+?\d{10,15}$/,
+} as const;
+
 export const validationRules: ValidationRules = {
   /**
     Имя, Фамилия
@@ -14,22 +21,22 @@ export const validationRules: ValidationRules = {
    */
   first_name: (value: string): string | null => {
     if (!value) {
-      return 'Поле обязательно для заполнения';
+      return "Поле обязательно для заполнения";
     }
-    const regex = /^[A-ZА-ЯЁ][a-zA-Zа-яёА-ЯЁ-]*$/;
+    const regex = VALIDATION_REGEX.NAME;
     if (!regex.test(value)) {
-      return 'Первая буква должна быть заглавной, только буквы и дефис';
+      return "Первая буква должна быть заглавной, только буквы и дефис";
     }
     return null;
   },
 
   second_name: (value: string): string | null => {
     if (!value) {
-      return 'Поле обязательно для заполнения';
+      return "Поле обязательно для заполнения";
     }
-    const regex = /^[A-ZА-ЯЁ][a-zA-Zа-яёА-ЯЁ-]*$/;
+    const regex = VALIDATION_REGEX.NAME;
     if (!regex.test(value)) {
-      return 'Первая буква должна быть заглавной, только буквы и дефис';
+      return "Первая буква должна быть заглавной, только буквы и дефис";
     }
     return null;
   },
@@ -44,17 +51,17 @@ export const validationRules: ValidationRules = {
    */
   login: (value: string): string | null => {
     if (!value) {
-      return 'Поле обязательно для заполнения';
+      return "Поле обязательно для заполнения";
     }
     if (value.length < 3 || value.length > 20) {
-      return 'Логин должен быть от 3 до 20 символов';
+      return "Логин должен быть от 3 до 20 символов";
     }
-    const regex = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
+    const regex = VALIDATION_REGEX.LOGIN;
     if (!regex.test(value)) {
-      return 'Логин может содержать латиницу, цифры, дефис и подчеркивание';
+      return "Логин может содержать латиницу, цифры, дефис и подчеркивание";
     }
     if (/^\d+$/.test(value)) {
-      return 'Логин не может состоять только из цифр';
+      return "Логин не может состоять только из цифр";
     }
     return null;
   },
@@ -68,11 +75,11 @@ export const validationRules: ValidationRules = {
    */
   email: (value: string): string | null => {
     if (!value) {
-      return 'Поле обязательно для заполнения';
+      return "Поле обязательно для заполнения";
     }
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const regex = VALIDATION_REGEX.EMAIL;
     if (!regex.test(value)) {
-      return 'Введите корректный email';
+      return "Введите корректный email";
     }
     return null;
   },
@@ -85,16 +92,16 @@ export const validationRules: ValidationRules = {
    */
   password: (value: string): string | null => {
     if (!value) {
-      return 'Поле обязательно для заполнения';
+      return "Поле обязательно для заполнения";
     }
     if (value.length < 8 || value.length > 40) {
-      return 'Пароль должен быть от 8 до 40 символов';
+      return "Пароль должен быть от 8 до 40 символов";
     }
     if (!/[A-Z]/.test(value)) {
-      return 'Пароль должен содержать хотя бы одну заглавную букву';
+      return "Пароль должен содержать хотя бы одну заглавную букву";
     }
     if (!/\d/.test(value)) {
-      return 'Пароль должен содержать хотя бы одну цифру';
+      return "Пароль должен содержать хотя бы одну цифру";
     }
     return null;
   },
@@ -107,11 +114,11 @@ export const validationRules: ValidationRules = {
    */
   phone: (value: string): string | null => {
     if (!value) {
-      return 'Поле обязательно для заполнения';
+      return "Поле обязательно для заполнения";
     }
-    const regex = /^\+?\d{10,15}$/;
+    const regex = VALIDATION_REGEX.PHONE;
     if (!regex.test(value)) {
-      return 'Телефон должен содержать от 10 до 15 цифр, может начинаться с +';
+      return "Телефон должен содержать от 10 до 15 цифр, может начинаться с +";
     }
     return null;
   },
@@ -121,8 +128,8 @@ export const validationRules: ValidationRules = {
     - Не должно быть пустым
    */
   message: (value: string): string | null => {
-    if (!value || value.trim() === '') {
-      return 'Сообщение не может быть пустым';
+    if (!value || value.trim() === "") {
+      return "Сообщение не может быть пустым";
     }
     return null;
   },
@@ -133,11 +140,11 @@ export const validationRules: ValidationRules = {
    */
   display_name: (value: string): string | null => {
     if (!value) {
-      return 'Поле обязательно для заполнения';
+      return "Поле обязательно для заполнения";
     }
-    const regex = /^[A-ZА-ЯЁ][a-zA-Zа-яёА-ЯЁ-]*$/;
+    const regex = VALIDATION_REGEX.NAME;
     if (!regex.test(value)) {
-      return 'Первая буква должна быть заглавной, только буквы и дефис';
+      return "Первая буква должна быть заглавной, только буквы и дефис";
     }
     return null;
   },
@@ -158,7 +165,7 @@ export function validateField(name: string, value: string): string | null {
 Валидировать форму целиком
  */
 export function validateForm(
-  data: Record<string, string>,
+  data: Record<string, string>
 ): Record<string, string> {
   const errors: Record<string, string> = {};
 

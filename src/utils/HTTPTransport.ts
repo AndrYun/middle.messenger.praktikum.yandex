@@ -30,49 +30,24 @@ function queryStringify(
   return keys.reduce((result, key, index) => {
     const value = data[key];
     const separator = index < keys.length - 1 ? "&" : "";
-    return `${result}${key}=${value}${separator}`;
+    return `${result}${encodeURIComponent(key)}=${encodeURIComponent(
+      value
+    )}${separator}`;
   }, "?");
 }
 
 class HTTPTransport {
-  get: HTTPMethod = (url, options = {}) => {
-    return this.request(
-      url,
-      { ...options, method: METHODS.GET },
-      options.timeout
-    );
-  };
+  private createMethod(method: METHODS): HTTPMethod {
+    return (url, options = {}) => this.request(url, { ...options, method });
+  }
 
-  post: HTTPMethod = (url, options = {}) => {
-    return this.request(
-      url,
-      { ...options, method: METHODS.POST },
-      options.timeout
-    );
-  };
+  public get = this.createMethod(METHODS.GET);
+  public post = this.createMethod(METHODS.POST);
+  public put = this.createMethod(METHODS.PUT);
+  public delete = this.createMethod(METHODS.DELETE);
 
-  put: HTTPMethod = (url, options = {}) => {
-    return this.request(
-      url,
-      { ...options, method: METHODS.PUT },
-      options.timeout
-    );
-  };
-
-  delete: HTTPMethod = (url, options = {}) => {
-    return this.request(
-      url,
-      { ...options, method: METHODS.DELETE },
-      options.timeout
-    );
-  };
-
-  private request(
-    url: string,
-    options: Options,
-    timeout = 5000
-  ): Promise<XMLHttpRequest> {
-    const { headers = {}, method, data } = options;
+  private request<R = unknown>(url: string, options: Options): Promise<R> {
+    const { headers = {}, method, data, timeout = 5000 } = options;
 
     return new Promise((resolve, reject) => {
       if (!method) {
@@ -96,7 +71,7 @@ class HTTPTransport {
       });
 
       xhr.onload = () => {
-        resolve(xhr);
+        resolve(xhr as R);
       };
 
       xhr.onabort = () => {

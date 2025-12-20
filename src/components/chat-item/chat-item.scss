@@ -1,4 +1,4 @@
-@use '../../styles/variables' as *;
+@use "../../styles/variables" as *;
 
 .chat-item {
   display: flex;
@@ -9,11 +9,11 @@
   border-radius: $border-radius-sm;
 
   &:hover {
-    background-color: #f4f4f5;
+    background-color: $color-chat-item;
   }
 
   &--active {
-    background-color: #e9eaed;
+    background-color: $color-chat-item-active;
   }
 
   &__avatar {

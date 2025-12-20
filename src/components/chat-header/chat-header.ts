@@ -1,16 +1,16 @@
-import { Block } from '../../core';
-import { Avatar } from '../avatar';
-import type { ChatHeaderProps } from './types';
-import template from './chat-header.hbs?raw';
+import { Block } from "../../core";
+import { Avatar } from "../avatar";
+import type { ChatHeaderProps } from "./types";
+import template from "./chat-header.hbs?raw";
 
 export class ChatHeader extends Block<ChatHeaderProps> {
   constructor(props: ChatHeaderProps) {
-    super('div', {
+    super("div", {
       ...props,
       avatar:
-        props.avatar
-        || new Avatar({
-          size: 'small',
+        props.avatar ||
+        new Avatar({
+          size: "small",
           alt: props.name,
         }),
       events: {
@@ -20,10 +20,14 @@ export class ChatHeader extends Block<ChatHeaderProps> {
   }
 
   private handleClick(e: Event): void {
-    const target = e.target as HTMLElement;
+    const target = e.target;
+
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
 
     // чекам клик по меню
-    if (target.closest('.chat-header__menu')) {
+    if (target.closest(".chat-header__menu")) {
       if (this.props.onMenuClick) {
         this.props.onMenuClick();
       }

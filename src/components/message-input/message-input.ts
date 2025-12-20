@@ -1,13 +1,13 @@
-import { Block } from '../../core';
-import type { MessageInputProps } from './types';
-import { validateField } from '../../utils/validation';
-import template from './message-input.hbs?raw';
+import { Block } from "../../core";
+import type { MessageInputProps } from "./types";
+import { validateField } from "../../utils/validation";
+import template from "./message-input.hbs?raw";
 
 export class MessageInput extends Block<MessageInputProps> {
   constructor(props: MessageInputProps) {
-    super('div', {
+    super("div", {
       ...props,
-      placeholder: props.placeholder || 'Сообщение',
+      placeholder: props.placeholder || "Сообщение",
       events: {
         submit: (e: Event) => this.handleSubmit(e),
         click: (e: Event) => this.handleClick(e),
@@ -16,10 +16,13 @@ export class MessageInput extends Block<MessageInputProps> {
   }
 
   private handleClick(e: Event): void {
-    const target = e.target as HTMLElement;
+    const target = e.target;
 
-    if (target.closest('.message-input__attach')) {
-      e.preventDefault();
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (target.closest(".message-input__attach")) {
       if (this.props.onAttach) {
         this.props.onAttach();
       }
@@ -29,35 +32,40 @@ export class MessageInput extends Block<MessageInputProps> {
   private handleSubmit(e: Event): void {
     e.preventDefault();
 
-    const input = this.element?.querySelector('.message-input__field') as HTMLInputElement;
-    const message = input?.value?.trim();
+    const input = this.element?.querySelector<HTMLInputElement>(
+      ".message-input__field"
+    );
+    const message = input?.value.trim();
 
-    // валидация
-    const error = validateField('message', message || '');
+    const error = validateField("message", message || "");
 
     if (error) {
-      console.error('Validation error:', error);
+      console.error("Validation error:", error);
       return;
     }
 
-    // отправка сообщениыя
     if (this.props.onSubmit && message) {
       this.props.onSubmit(message);
-      input.value = ''; // Очищаем поле после отправки
     }
+
+    this.clear();
   }
 
   // получить тек знач
   public getValue(): string {
-    const input = this.element?.querySelector('.message-input__field') as HTMLInputElement;
-    return input?.value || '';
+    const input = this.element?.querySelector<HTMLInputElement>(
+      ".message-input__field"
+    );
+    return input?.value || "";
   }
 
   // очищаем поле
   public clear(): void {
-    const input = this.element?.querySelector('.message-input__field') as HTMLInputElement;
+    const input = this.element?.querySelector<HTMLInputElement>(
+      ".message-input__field"
+    );
     if (input) {
-      input.value = '';
+      input.value = "";
     }
   }
 

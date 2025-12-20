@@ -159,7 +159,11 @@ export class ChatPage extends Block<ChatPageProps> {
   }
 
   private handleClick(e: Event): void {
-    const target = e.target as HTMLElement;
+    const target = e.target;
+
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
 
     if (target.closest(".chat-page__profile-link")) {
       e.preventDefault();
@@ -194,10 +198,12 @@ export class ChatPage extends Block<ChatPageProps> {
       isMy: true,
     });
 
-    const messageList = this.children.messageList as Message[];
-    messageList.push(newMessage);
+    const messageListChild = this.children.messageList;
 
-    this.setProps({ messageList });
+    if (Array.isArray(messageListChild)) {
+      messageListChild.push(newMessage);
+      this.setProps({ messageList: messageListChild });
+    }
   }
 
   private openAddUserModal(): void {

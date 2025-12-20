@@ -1,40 +1,40 @@
-import { Block } from '../../core';
-import { AvatarUpload } from '../../components/avatar-upload';
-import { Input } from '../../components/input';
-import { Button } from '../../components/button';
-import type { ProfilePasswordPageProps, PasswordChangeData } from './types';
-import template from './profile-password.hbs?raw';
+import { Block } from "../../core";
+import { AvatarUpload } from "../../components/avatar-upload";
+import { Input } from "../../components/input";
+import { Button } from "../../components/button";
+import type { ProfilePasswordPageProps, PasswordChangeData } from "./types";
+import template from "./profile-password.hbs?raw";
 
 export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
   constructor(props: ProfilePasswordPageProps) {
-    super('div', {
+    super("div", {
       ...props,
       avatar: new AvatarUpload({
-        size: 'large',
-        alt: 'User avatar',
+        size: "large",
+        alt: "User avatar",
       }),
       oldPasswordInput: new Input({
-        label: 'Старый пароль',
-        type: 'password',
-        name: 'password',
-        placeholder: '••••••••••••',
+        label: "Старый пароль",
+        type: "password",
+        name: "password",
+        placeholder: "••••••••••••",
       }),
       newPasswordInput: new Input({
-        label: 'Новый пароль',
-        type: 'password',
-        name: 'password',
-        placeholder: '••••••••••••',
+        label: "Новый пароль",
+        type: "password",
+        name: "password",
+        placeholder: "••••••••••••",
       }),
       newPasswordConfirmInput: new Input({
-        label: 'Повторите новый пароль',
-        type: 'password',
-        name: 'password',
-        placeholder: '••••••••••••',
+        label: "Повторите новый пароль",
+        type: "password",
+        name: "password",
+        placeholder: "••••••••••••",
       }),
       submitButton: new Button({
-        text: 'Сохранить',
-        type: 'submit',
-        variant: 'primary',
+        text: "Сохранить",
+        type: "submit",
+        variant: "primary",
         onClick: (e) => this.handleSubmit(e),
       }),
       events: {
@@ -44,11 +44,15 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
   }
 
   private handleBackClick(e: Event): void {
-    const target = e.target as HTMLElement;
+    const target = e.target;
 
-    if (target.closest('.profile-page__back')) {
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    if (target.closest(".profile-page__back")) {
       e.preventDefault();
-      window.navigateTo('profile');
+      window.navigateTo("profile");
     }
   }
 
@@ -66,7 +70,7 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
     const isConfirmValid = newPasswordConfirmInput.validate();
 
     if (!isOldValid || !isNewValid || !isConfirmValid) {
-      console.log('Форма содержит ошибки');
+      console.log("Форма содержит ошибки");
       return;
     }
 
@@ -76,7 +80,7 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
 
     // проверка на совпадение паролей
     if (newPassword !== confirmPassword) {
-      newPasswordConfirmInput.setProps({ error: 'Пароли не совпадают' });
+      newPasswordConfirmInput.setProps({ error: "Пароли не совпадают" });
       return;
     }
 
@@ -85,13 +89,13 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
       newPassword,
     };
 
-    console.log('Password change:', data);
+    console.log("Password change:", data);
 
     if (this.props.onSubmit) {
       this.props.onSubmit(data);
     } else {
-      alert('Пароль изменен!');
-      window.navigateTo('profile');
+      alert("Пароль изменен!");
+      window.navigateTo("profile");
     }
   }
 

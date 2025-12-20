@@ -1,26 +1,26 @@
-import { Block } from '../../core';
-import { ProfileField } from '../../components/profile-field';
-import { Link } from '../../components/link';
-import { Modal } from '../../components/modal';
-import { AvatarUpload } from '../../components/avatar-upload';
-import type { ProfilePageProps } from './types';
-import template from './profile.hbs?raw';
+import { Block } from "../../core";
+import { ProfileField } from "../../components/profile-field";
+import { Link } from "../../components/link";
+import { Modal } from "../../components/modal";
+import { AvatarUpload } from "../../components/avatar-upload";
+import type { ProfilePageProps } from "./types";
+import template from "./profile.hbs?raw";
 
 export class ProfilePage extends Block<ProfilePageProps> {
   constructor(props: ProfilePageProps) {
     const defaultData = props.data || {
-      email: 'pochta@yandex.ru',
-      login: 'ivanivanov',
-      first_name: 'Иван',
-      second_name: 'Иванов',
-      display_name: 'Иван',
-      phone: '+7 (999) 999 99 99',
+      email: "pochta@yandex.ru",
+      login: "ivanivanov",
+      first_name: "Иван",
+      second_name: "Иванов",
+      display_name: "Иван",
+      phone: "+7 (999) 999 99 99",
     };
 
     // cоздаем компонент загрузки аватара
     const avatarUpload = new AvatarUpload({
       onChange: (file) => {
-        console.log('File selected:', file);
+        console.log("File selected:", file);
         if (props.onAvatarClick) {
           props.onAvatarClick();
         }
@@ -29,7 +29,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
 
     // cоздаем модалку
     const avatarModal = new Modal({
-      title: 'Загрузите файл',
+      title: "Загрузите файл",
       isOpen: false,
       content: avatarUpload,
       onClose: () => {
@@ -37,62 +37,62 @@ export class ProfilePage extends Block<ProfilePageProps> {
       },
     });
 
-    super('div', {
+    super("div", {
       ...props,
       data: defaultData,
       avatarModal,
       emailField: new ProfileField({
-        label: 'Почта',
+        label: "Почта",
         value: defaultData.email,
       }),
       loginField: new ProfileField({
-        label: 'Логин',
+        label: "Логин",
         value: defaultData.login,
       }),
       firstNameField: new ProfileField({
-        label: 'Имя',
+        label: "Имя",
         value: defaultData.first_name,
       }),
       secondNameField: new ProfileField({
-        label: 'Фамилия',
+        label: "Фамилия",
         value: defaultData.second_name,
       }),
       displayNameField: new ProfileField({
-        label: 'Имя в чате',
+        label: "Имя в чате",
         value: defaultData.display_name,
       }),
       phoneField: new ProfileField({
-        label: 'Телефон',
+        label: "Телефон",
         value: defaultData.phone,
       }),
       editLink: new Link({
-        text: 'Изменить данные',
-        href: '#',
-        variant: 'primary',
+        text: "Изменить данные",
+        href: "#",
+        variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo('profile-edit');
+          window.navigateTo("profile-edit");
         },
       }),
       passwordLink: new Link({
-        text: 'Изменить пароль',
-        href: '#',
-        variant: 'primary',
+        text: "Изменить пароль",
+        href: "#",
+        variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo('profile-password');
+          window.navigateTo("profile-password");
         },
       }),
       logoutLink: new Link({
-        text: 'Выйти',
-        href: '#',
-        variant: 'danger',
+        text: "Выйти",
+        href: "#",
+        variant: "danger",
         onClick: (e) => {
           e.preventDefault();
           if (props.onLogout) {
             props.onLogout();
           } else {
-            window.navigateTo('login');
+            window.navigateTo("login");
           }
         },
       }),
@@ -103,18 +103,24 @@ export class ProfilePage extends Block<ProfilePageProps> {
   }
 
   private handleClick(e: Event): void {
-    const target = e.target as HTMLElement;
+    const target = e.target;
 
-    // вернуться
-    if (target.closest('.profile-page__back')) {
-      e.preventDefault();
-      window.navigateTo('login');
+    if (!(target instanceof Element)) {
       return;
     }
 
-    if (target.closest('.profile-page__avatar-circle')) {
-      const modal = this.children.avatarModal as Modal;
-      modal.open();
+    // вернуться
+    if (target.closest(".profile-page__back")) {
+      e.preventDefault();
+      window.navigateTo("login");
+      return;
+    }
+
+    if (target.closest(".profile-page__avatar-circle")) {
+      const modal = this.children.avatarModal;
+      if (modal instanceof Modal) {
+        modal.open();
+      }
     }
   }
 

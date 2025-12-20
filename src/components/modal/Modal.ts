@@ -1,10 +1,10 @@
-import { Block } from '../../core';
-import type { ModalProps } from './types';
-import template from './modal.hbs?raw';
+import { Block } from "../../core";
+import type { ModalProps } from "./types";
+import template from "./modal.hbs?raw";
 
 export class Modal extends Block<ModalProps> {
   constructor(props: ModalProps) {
-    super('div', {
+    super("div", {
       ...props,
       isOpen: props.isOpen || false,
       events: {
@@ -14,9 +14,13 @@ export class Modal extends Block<ModalProps> {
   }
 
   private handleOverlayClick(e: Event): void {
-    const target = e.target as HTMLElement;
+    const target = e.target;
 
-    if (target.classList.contains('modal__overlay')) {
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
+    if (target.classList.contains("modal__overlay")) {
       this.close();
     }
   }

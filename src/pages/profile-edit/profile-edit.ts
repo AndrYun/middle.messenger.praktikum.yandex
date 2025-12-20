@@ -1,70 +1,70 @@
-import { Block } from '../../core';
-import { AvatarUpload } from '../../components/avatar-upload';
-import { Input } from '../../components/input';
-import { Button } from '../../components/button';
-import type { ProfileEditPageProps } from './types';
-import type { ProfileData } from '../profile/types';
-import template from './profile-edit.hbs?raw';
+import { Block } from "../../core";
+import { AvatarUpload } from "../../components/avatar-upload";
+import { Input } from "../../components/input";
+import { Button } from "../../components/button";
+import type { ProfileEditPageProps } from "./types";
+import type { ProfileData } from "../profile/types";
+import template from "./profile-edit.hbs?raw";
 
 export class ProfileEditPage extends Block<ProfileEditPageProps> {
   constructor(props: ProfileEditPageProps) {
     const defaultData = props.data || {
-      email: 'pochta@yandex.ru',
-      login: 'ivanivanov',
-      first_name: 'Иван',
-      second_name: 'Иванов',
-      display_name: 'Иван',
-      phone: '+7 (909) 967 30 30',
+      email: "pochta@yandex.ru",
+      login: "ivanivanov",
+      first_name: "Иван",
+      second_name: "Иванов",
+      display_name: "Иван",
+      phone: "+7 (909) 967 30 30",
     };
 
-    super('div', {
+    super("div", {
       ...props,
       data: defaultData,
       avatar: new AvatarUpload({
-        size: 'large',
+        size: "large",
         src: props.data?.avatar,
         alt: defaultData.first_name,
       }),
       emailInput: new Input({
-        label: 'Почта',
-        type: 'email',
-        name: 'email',
+        label: "Почта",
+        type: "email",
+        name: "email",
         value: defaultData.email,
       }),
       loginInput: new Input({
-        label: 'Логин',
-        type: 'text',
-        name: 'login',
+        label: "Логин",
+        type: "text",
+        name: "login",
         value: defaultData.login,
       }),
       firstNameInput: new Input({
-        label: 'Имя',
-        type: 'text',
-        name: 'first_name',
+        label: "Имя",
+        type: "text",
+        name: "first_name",
         value: defaultData.first_name,
       }),
       secondNameInput: new Input({
-        label: 'Фамилия',
-        type: 'text',
-        name: 'second_name',
+        label: "Фамилия",
+        type: "text",
+        name: "second_name",
         value: defaultData.second_name,
       }),
       displayNameInput: new Input({
-        label: 'Имя в чате',
-        type: 'text',
-        name: 'display_name',
+        label: "Имя в чате",
+        type: "text",
+        name: "display_name",
         value: defaultData.display_name,
       }),
       phoneInput: new Input({
-        label: 'Телефон',
-        type: 'tel',
-        name: 'phone',
+        label: "Телефон",
+        type: "tel",
+        name: "phone",
         value: defaultData.phone,
       }),
       submitButton: new Button({
-        text: 'Сохранить',
-        type: 'submit',
-        variant: 'primary',
+        text: "Сохранить",
+        type: "submit",
+        variant: "primary",
         onClick: (e) => this.handleSubmit(e),
       }),
       events: {
@@ -74,11 +74,15 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
   }
 
   private handleBackClick(e: Event): void {
-    const target = e.target as HTMLElement;
+    const target = e.target;
 
-    if (target.closest('.profile-page__back')) {
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    if (target.closest(".profile-page__back")) {
       e.preventDefault();
-      window.navigateTo('profile');
+      window.navigateTo("profile");
     }
   }
 
@@ -103,7 +107,7 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
     });
 
     if (!isValid) {
-      console.log('Форма содержит ошибки');
+      console.log("Форма содержит ошибки");
       return;
     }
 
@@ -117,13 +121,13 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
       phone: (this.children.phoneInput as Input).getValue(),
     };
 
-    console.log('Profile updated:', data);
+    console.log("Profile updated:", data);
 
     if (this.props.onSubmit) {
       this.props.onSubmit(data);
     } else {
-      alert('Данные сохранены!');
-      window.navigateTo('profile');
+      alert("Данные сохранены!");
+      window.navigateTo("profile");
     }
   }
 

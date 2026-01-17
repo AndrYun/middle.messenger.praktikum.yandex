@@ -1,11 +1,11 @@
 <div class="message {{#if isMy}}message--my{{/if}}">
   <div class="message__content">
     {{#if image}}
-      <img src="{{image}}" alt="" class="message__image">
+      <img src="{{image}}" alt="{{alt}}" class="message__image">
     {{/if}}
     {{#if text}}
       <p class="message__text">{{text}}</p>
     {{/if}}
-    <span class="message__time">{{time}}</span>
   </div>
+  <span class="message__time">{{time}}</span>
 </div>

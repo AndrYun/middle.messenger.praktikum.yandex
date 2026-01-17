@@ -1,34 +1,37 @@
-<div class="profile-page">
-  <aside class="profile-page__sidebar">
-    <a href="#profile" class="profile-page__back">
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <circle cx="14" cy="14" r="14" fill="#3369F3"/>
-        <path d="M16 10L12 14L16 18" stroke="white" stroke-width="2"/>
+<div class='profile-page'>
+  <nav class='profile-page__sidebar'>
+    <a href='#' class='profile-page__back'>
+      <svg width='28' height='28' viewBox='0 0 28 28' fill='none'>
+        <circle cx='14' cy='14' r='14' fill='#3369F3' />
+        <path d='M16 10L12 14L16 18' stroke='white' stroke-width='2' />
       </svg>
     </a>
-  </aside>
+  </nav>
 
-  <main class="profile-page__content">
-    <div class="profile-page__avatar">
-      <div class="profile-page__avatar-circle">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-          <rect width="40" height="40" rx="4" fill="#EFEFEF"/>
-          <circle cx="20" cy="15" r="6" fill="#CDCDCD"/>
-          <path d="M7 35C7 28.9249 11.9249 24 18 24H22C28.0751 24 33 28.9249 33 35V35" fill="#CDCDCD"/>
+  <main class='profile-page__content'>
+    <div class='profile-page__avatar'>
+      <div class='profile-page__avatar-circle'>
+        <svg width='40' height='40' viewBox='0 0 40 40' fill='none'>
+          <rect width='40' height='40' rx='4' fill='#EFEFEF' />
+          <circle cx='20' cy='15' r='6' fill='#CDCDCD' />
+          <path
+            d='M7 35C7 28.9249 11.9249 24 18 24H22C28.0751 24 33 28.9249 33 35V35'
+            fill='#CDCDCD'
+          />
         </svg>
       </div>
     </div>
 
-    <form class="profile-page__form">
-      {{> input label="Почта" type="email" name="email" value="pochta@yandex.ru"}}
-      {{> input label="Логин" type="text" name="login" value="ivanivanov"}}
-      {{> input label="Имя" type="text" name="first_name" value="Иван"}}
-      {{> input label="Фамилия" type="text" name="second_name" value="Иванов"}}
-      {{> input label="Имя в чате" type="text" name="display_name" value="Иван"}}
-      {{> input label="Телефон" type="tel" name="phone" value="+7 (909) 967 30 30"}}
+    <form class='profile-page__form'>
+      <div data-id='emailInput'></div>
+      <div data-id='loginInput'></div>
+      <div data-id='firstNameInput'></div>
+      <div data-id='secondNameInput'></div>
+      <div data-id='displayNameInput'></div>
+      <div data-id='phoneInput'></div>
 
-      <div class="profile-page__form-actions">
-        {{> button text="Сохранить" type="submit" variant="primary"}}
+      <div class='profile-page__form-actions'>
+        <div data-id='submitButton'></div>
       </div>
     </form>
   </main>

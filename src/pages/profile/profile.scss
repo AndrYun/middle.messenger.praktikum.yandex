@@ -1,5 +1,5 @@
-@use '../../styles/variables' as *;
-@use '../../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .profile-page {
   display: flex;
@@ -33,21 +33,44 @@
 
   &__avatar {
     @include flex-column($spacing-md);
+
     align-items: center;
     margin-bottom: $spacing-xl * 2;
   }
 
   &__avatar-circle {
+    position: relative;
     width: 130px;
     height: 130px;
     border-radius: 50%;
-    background-color: #efefef;
+    background-color: $color-avatar;
+
     @include flex-center;
+
     cursor: pointer;
     transition: opacity $transition-base;
+    overflow: hidden;
 
-    &:hover {
-      opacity: 0.8;
+    &:hover .profile-page__avatar-overlay {
+      opacity: 1;
+    }
+  }
+
+  &__avatar-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    @include flex-center;
+
+    opacity: 0;
+    transition: opacity $transition-base;
+
+    span {
+      color: $color-white;
+      font-size: $font-size-sm;
+      text-align: center;
+      line-height: 1.4;
     }
   }
 
@@ -55,6 +78,7 @@
     font-size: $font-size-md;
     font-weight: $font-weight-semibold;
     color: $color-text-primary;
+    margin: 0;
   }
 
   &__fields {
@@ -63,6 +87,7 @@
 
   &__actions {
     @include flex-column($spacing-sm);
+
     padding-top: $spacing-lg;
   }
 }

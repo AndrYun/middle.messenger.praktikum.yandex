@@ -1,10 +1,6 @@
-<div class="chat-item {{#if active}}chat-item--active{{/if}}" data-chat-id="{{id}}">
+<div class="chat-item {{#if active}}chat-item--active{{/if}}">
   <div class="chat-item__avatar">
-    <svg width="47" height="47" viewBox="0 0 47 47" fill="none">
-      <circle cx="23.5" cy="23.5" r="23.5" fill="#EFEFEF"/>
-      <circle cx="23.5" cy="18" r="7" fill="#CDCDCD"/>
-      <path d="M8 41C8 33.268 14.268 27 22 27H25C32.732 27 39 33.268 39 41V41" fill="#CDCDCD"/>
-    </svg>
+    <div data-id="avatar"></div>
   </div>
   
   <div class="chat-item__content">
@@ -13,7 +9,9 @@
       <span class="chat-item__time">{{time}}</span>
     </div>
     <div class="chat-item__footer">
-      <span class="chat-item__message">{{#if isYou}}<strong>Вы:</strong> {{/if}}{{lastMessage}}</span>
+      <span class="chat-item__message">
+        {{#if isYou}}<strong>Вы:</strong> {{/if}}{{lastMessage}}
+      </span>
       {{#if unreadCount}}
         <span class="chat-item__unread">{{unreadCount}}</span>
       {{/if}}

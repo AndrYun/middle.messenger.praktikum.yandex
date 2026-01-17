@@ -5,39 +5,59 @@
   display: flex;
   align-items: center;
   gap: $spacing-md;
-  padding: $spacing-md;
+  padding: $spacing-md $spacing-lg;
   background-color: $color-white;
   border-top: 1px solid $color-border;
 
   &__attach {
     @include button-reset;
+
     flex-shrink: 0;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
     opacity: 0.6;
     transition: opacity $transition-base;
 
     &:hover {
       opacity: 1;
     }
+
+    svg {
+      width: 32px;
+      height: 32px;
+    }
   }
 
   &__field {
     @include input-reset;
+
     flex: 1;
     padding: $spacing-sm $spacing-md;
-    background-color: #f8f8f8;
-    border-radius: 30px;
+    border: none;
+    background-color: transparent;
     font-size: $font-size-base;
 
     &::placeholder {
       color: $color-text-secondary;
     }
+
+    &:focus {
+      outline: none;
+    }
   }
 
   &__submit {
     @include button-reset;
+
     flex-shrink: 0;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
     transition: transform $transition-base;
 
     &:hover {
@@ -46,6 +66,11 @@
 
     &:active {
       transform: scale(0.95);
+    }
+
+    svg {
+      width: 28px;
+      height: 28px;
     }
   }
 }

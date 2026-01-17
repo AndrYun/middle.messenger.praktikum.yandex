@@ -1,78 +1,155 @@
 import './styles/main.scss';
-import './components/input/input.scss';
 import './components/button/button.scss';
-import './components/profile-field/profile-field.scss';
+import './components/input/input.scss';
 import './components/link/link.scss';
-import './components/modal/modal.scss';
-import './components/avatar-upload/avatar-upload.scss';
-import './components/chat-item/chat-item.scss';
-import './components/message/message.scss';
-import './components/message-input/message-input.scss';
-import './components/chat-header/chat-header.scss';
-import './components/chat-menu/chat-menu.scss';
-import './components/error-page/error-page.scss';
 import './pages/login/login.scss';
+import './components/profile-field/profile-field.scss';
+import './components/modal/modal.scss';
 import './pages/register/register.scss';
+import './components/add-user-form/add-user-form.scss';
 import './pages/profile/profile.scss';
 import './pages/profile-edit/profile-edit.scss';
 import './pages/profile-password/profile-password.scss';
 import './pages/chat/chat.scss';
-import Handlebars from 'handlebars';
+import './components/avatar-upload/avatar-upload.scss';
+import './components/error-page/error-page.scss';
+import './components/chat-item/chat-item.scss';
+import './components/chat-header/chat-header.scss';
+import './components/chat-menu/chat-menu.scss';
+import './components/message-input/message-input.scss';
+import './components/avatar/avatar.scss';
+import './components/message/message.scss';
 
-import inputTemplate from './components/input/input.hbs?raw';
-import buttonTemplate from './components/button/button.hbs?raw';
-import profileFieldTemplate from './components/profile-field/profile-field.hbs?raw';
-import linkTemplate from './components/link/link.hbs?raw';
-import modalTemplate from './components/modal/modal.hbs?raw';
-import avatarUploadTemplate from './components/avatar-upload/avatar-upload.hbs?raw';
-import chatItemTemplate from './components/chat-item/chat-item.hbs?raw';
-import messageTemplate from './components/message/message.hbs?raw';
-import messageInputTemplate from './components/message-input/message-input.hbs?raw';
-import chatHeaderTemplate from './components/chat-header/chat-header.hbs?raw';
-import chatMenuTemplate from './components/chat-menu/chat-menu.hbs?raw';
-import errorPageTemplate from './components/error-page/error-page.hbs?raw';
+import type { Block } from './core';
+import { LoginPage } from './pages/login';
+import { RegisterPage } from './pages/register';
+import { ProfilePage } from './pages/profile';
+import { ProfileEditPage } from './pages/profile-edit';
+import { ProfilePasswordPage } from './pages/profile-password';
+import { Error404Page } from './pages/error-404';
+import { Error500Page } from './pages/error-500';
+import { ChatPage } from './pages/chat';
 
-import { renderPage, getCurrentPage } from './utils/renderPage';
-import { initAvatarModal } from './utils/avatarModal';
-import { initChatInteractions } from './utils/chatInteractions';
-import { Pages } from './utils/pages';
+// Функция для рендера компонента в DOM
+function render(page: Block): void {
+  const root = document.querySelector('#app');
 
-Handlebars.registerPartial('input', inputTemplate);
-Handlebars.registerPartial('button', buttonTemplate);
-Handlebars.registerPartial('profile-field', profileFieldTemplate);
-Handlebars.registerPartial('link', linkTemplate);
-Handlebars.registerPartial('modal', modalTemplate);
-Handlebars.registerPartial('avatar-upload', avatarUploadTemplate);
-Handlebars.registerPartial('chat-item', chatItemTemplate);
-Handlebars.registerPartial('message', messageTemplate);
-Handlebars.registerPartial('message-input', messageInputTemplate);
-Handlebars.registerPartial('chat-header', chatHeaderTemplate);
-Handlebars.registerPartial('chat-menu', chatMenuTemplate);
-Handlebars.registerPartial('error-page', errorPageTemplate);
+  if (!root) {
+    throw new Error('Элемент #app не найден');
+  }
 
-function initApp(): void {
-  renderPage(getCurrentPage());
-  initPageInteractions(getCurrentPage());
+  root.innerHTML = '';
 
-  window.addEventListener('hashchange', () => {
-    const newPage = getCurrentPage();
-    renderPage(newPage);
-    initPageInteractions(newPage);
-  });
+  const content = page.getContent();
+  if (content) {
+    root.appendChild(content);
+  }
+
+  page.dispatchComponentDidMount();
 }
 
-function initPageInteractions(page: Pages): void {
-  setTimeout(() => {
-    if (page === Pages.PROFILE) {
-      initAvatarModal();
-    } else if (page === Pages.CHAT) {
-      initChatInteractions();
-    }
-  }, 0);
+function navigateTo(pageName: string): void {
+  let page: Block;
+
+  switch (pageName) {
+    case 'login':
+      page = new LoginPage({
+        onSubmit: (data) => {
+          console.log('Login:', data);
+          alert(`Добро пожаловать, ${data.login}!`);
+        },
+      });
+      break;
+
+    case 'register':
+      page = new RegisterPage({
+        onSubmit: (data) => {
+          console.log('Register:', data);
+          alert(`Регистрация успешна!\nEmail: ${data.email}`);
+          navigateTo('login');
+        },
+      });
+      break;
+
+    case 'profile':
+      page = new ProfilePage({
+        data: {
+          email: 'pochta@yandex.ru',
+          login: 'ivanivanov',
+          first_name: 'Иван',
+          second_name: 'Иванов',
+          display_name: 'Иван',
+          phone: '+7 (999) 999 99 99',
+        },
+        onAvatarClick: () => {
+          console.log('Avatar clicked - открыть модалку загрузки');
+        },
+        onLogout: () => {
+          alert('Вы вышли из системы');
+          navigateTo('login');
+        },
+      });
+      break;
+
+    case 'profile-edit':
+      page = new ProfileEditPage({
+        data: {
+          email: 'pochta@yandex.ru',
+          login: 'ivanivanov',
+          first_name: 'Иван',
+          second_name: 'Иванов',
+          display_name: 'Иван',
+          phone: '+7 (999) 999 99 99',
+        },
+        onSubmit: (data) => {
+          console.log('Profile updated:', data);
+          alert('Данные сохранены!');
+          navigateTo('profile');
+        },
+      });
+      break;
+
+    case 'profile-password':
+      page = new ProfilePasswordPage({
+        onSubmit: (data) => {
+          console.log('Password changed:', data);
+          alert('Пароль изменен!');
+          navigateTo('profile');
+        },
+      });
+      break;
+
+    case '404':
+      page = new Error404Page({});
+      break;
+
+    case '500':
+      page = new Error500Page({});
+      break;
+
+    case 'chat':
+      page = new ChatPage({
+        onChatSelect: (chatId) => {
+          console.log('Selected chat:', chatId);
+        },
+        onMessageSend: (message) => {
+          console.log('Message sent:', message);
+        },
+      });
+      break;
+
+    default:
+      page = new LoginPage({
+        onSubmit: (data) => {
+          console.log('Login:', data);
+          alert(`Добро пожаловать, ${data.login}!`);
+        },
+      });
+  }
+
+  render(page);
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initApp);
-} else {
-  initApp();
-}
+window.navigateTo = navigateTo;
+
+navigateTo('login');

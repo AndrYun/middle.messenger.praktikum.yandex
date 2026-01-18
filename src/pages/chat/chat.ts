@@ -71,9 +71,9 @@ export class ChatPage extends Block<ChatPageProps> {
   private chatMenu: ChatMenu;
   private addUserModal: Modal;
 
-  constructor(props: ChatPageProps) {
-    const chats = props.chats || MOCK_CHATS;
-    const selectedChatId = props.selectedChatId || 4;
+  constructor(props?: ChatPageProps) {
+    const chats = props?.chats || MOCK_CHATS;
+    const selectedChatId = props?.selectedChatId || 4;
 
     const selectedChat = chats.find((chat) => chat.id === selectedChatId);
 
@@ -139,8 +139,8 @@ export class ChatPage extends Block<ChatPageProps> {
         placeholder: "Сообщение",
         onSubmit: (message) => {
           console.log("Send message:", message);
-          if (props.onMessageSend) {
-            props.onMessageSend(message);
+          if (props?.onMessageSend) {
+            props?.onMessageSend(message);
           }
           this.addMessage(message);
         },
@@ -167,7 +167,7 @@ export class ChatPage extends Block<ChatPageProps> {
 
     if (target.closest(".chat-page__profile-link")) {
       e.preventDefault();
-      window.navigateTo("profile");
+      window.router.go("/settings");
       return;
     }
 

@@ -7,8 +7,8 @@ import type { ProfilePageProps } from "./types";
 import template from "./profile.hbs?raw";
 
 export class ProfilePage extends Block<ProfilePageProps> {
-  constructor(props: ProfilePageProps) {
-    const defaultData = props.data || {
+  constructor(props?: ProfilePageProps) {
+    const defaultData = props?.data || {
       email: "pochta@yandex.ru",
       login: "ivanivanov",
       first_name: "Иван",
@@ -21,8 +21,8 @@ export class ProfilePage extends Block<ProfilePageProps> {
     const avatarUpload = new AvatarUpload({
       onChange: (file) => {
         console.log("File selected:", file);
-        if (props.onAvatarClick) {
-          props.onAvatarClick();
+        if (props?.onAvatarClick) {
+          props?.onAvatarClick();
         }
       },
     });
@@ -71,7 +71,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
         variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo("profile-edit");
+          window.router.go("/profile-edit");
         },
       }),
       passwordLink: new Link({
@@ -80,7 +80,7 @@ export class ProfilePage extends Block<ProfilePageProps> {
         variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo("profile-password");
+          window.router.go("/profile-password");
         },
       }),
       logoutLink: new Link({
@@ -89,10 +89,10 @@ export class ProfilePage extends Block<ProfilePageProps> {
         variant: "danger",
         onClick: (e) => {
           e.preventDefault();
-          if (props.onLogout) {
+          if (props?.onLogout) {
             props.onLogout();
           } else {
-            window.navigateTo("login");
+            window.router.go("/");
           }
         },
       }),
@@ -109,10 +109,12 @@ export class ProfilePage extends Block<ProfilePageProps> {
       return;
     }
 
+    const backButton = target.closest(".profile-page__back");
+
     // вернуться
-    if (target.closest(".profile-page__back")) {
+    if (backButton) {
       e.preventDefault();
-      window.navigateTo("login");
+      window.router.go("/messenger");
       return;
     }
 

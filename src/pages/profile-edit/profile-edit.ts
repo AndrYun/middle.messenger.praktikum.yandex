@@ -7,8 +7,8 @@ import type { ProfileData } from "../profile/types";
 import template from "./profile-edit.hbs?raw";
 
 export class ProfileEditPage extends Block<ProfileEditPageProps> {
-  constructor(props: ProfileEditPageProps) {
-    const defaultData = props.data || {
+  constructor(props?: ProfileEditPageProps) {
+    const defaultData = props?.data || {
       email: "pochta@yandex.ru",
       login: "ivanivanov",
       first_name: "Иван",
@@ -22,7 +22,7 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
       data: defaultData,
       avatar: new AvatarUpload({
         size: "large",
-        src: props.data?.avatar,
+        src: props?.data?.avatar,
         alt: defaultData.first_name,
       }),
       emailInput: new Input({
@@ -80,9 +80,11 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
       return;
     }
 
-    if (target.closest(".profile-page__back")) {
+    const backButton = target.closest(".profile-page__back");
+
+    if (backButton) {
       e.preventDefault();
-      window.navigateTo("profile");
+      window.router.go("/settings");
     }
   }
 
@@ -127,7 +129,7 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
       this.props.onSubmit(data);
     } else {
       alert("Данные сохранены!");
-      window.navigateTo("profile");
+      window.router.go("/settings");
     }
   }
 

@@ -6,7 +6,7 @@ import type { ProfilePasswordPageProps, PasswordChangeData } from "./types";
 import template from "./profile-password.hbs?raw";
 
 export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
-  constructor(props: ProfilePasswordPageProps) {
+  constructor(props?: ProfilePasswordPageProps) {
     super("div", {
       ...props,
       avatar: new AvatarUpload({
@@ -50,9 +50,11 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
       return;
     }
 
-    if (target.closest(".profile-page__back")) {
+    const backButton = target.closest(".profile-page__back");
+
+    if (backButton) {
       e.preventDefault();
-      window.navigateTo("profile");
+      window.router.go("/settings");
     }
   }
 
@@ -95,7 +97,7 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
       this.props.onSubmit(data);
     } else {
       alert("Пароль изменен!");
-      window.navigateTo("profile");
+      window.router.go("/settings");
     }
   }
 

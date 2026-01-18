@@ -1,63 +1,63 @@
-import { Block } from '../../core';
-import { Button } from '../../components/button';
-import { Input } from '../../components/input';
-import { Link } from '../../components/link';
-import type { RegisterPageProps, RegisterData } from './types';
-import template from './register.hbs?raw';
+import { Block } from "../../core";
+import { Button } from "../../components/button";
+import { Input } from "../../components/input";
+import { Link } from "../../components/link";
+import type { RegisterPageProps, RegisterData } from "./types";
+import template from "./register.hbs?raw";
 
 export class RegisterPage extends Block<RegisterPageProps> {
   constructor(props: RegisterPageProps) {
-    super('div', {
+    super("div", {
       ...props,
       emailInput: new Input({
-        label: 'Почта',
-        type: 'email',
-        name: 'email',
-        placeholder: 'pochta@yandex.ru',
+        label: "Почта",
+        type: "email",
+        name: "email",
+        placeholder: "pochta@yandex.ru",
       }),
       loginInput: new Input({
-        label: 'Логин',
-        type: 'text',
-        name: 'login',
-        placeholder: 'ivanivanov',
+        label: "Логин",
+        type: "text",
+        name: "login",
+        placeholder: "ivanivanov",
       }),
       firstNameInput: new Input({
-        label: 'Имя',
-        type: 'text',
-        name: 'first_name',
-        placeholder: 'Иван',
+        label: "Имя",
+        type: "text",
+        name: "first_name",
+        placeholder: "Иван",
       }),
       secondNameInput: new Input({
-        label: 'Фамилия',
-        type: 'text',
-        name: 'second_name',
-        placeholder: 'Иванов',
+        label: "Фамилия",
+        type: "text",
+        name: "second_name",
+        placeholder: "Иванов",
       }),
       phoneInput: new Input({
-        label: 'Телефон',
-        type: 'tel',
-        name: 'phone',
-        placeholder: '+7 (999) 999 99 99',
+        label: "Телефон",
+        type: "tel",
+        name: "phone",
+        placeholder: "+7 (999) 999 99 99",
       }),
       passwordInput: new Input({
-        label: 'Пароль',
-        type: 'password',
-        name: 'password',
-        placeholder: '••••••••••••',
+        label: "Пароль",
+        type: "password",
+        name: "password",
+        placeholder: "••••••••••••",
       }),
       submitButton: new Button({
-        text: 'Create account',
-        type: 'submit',
-        variant: 'primary',
+        text: "Create account",
+        type: "submit",
+        variant: "primary",
         onClick: (e) => this.handleSubmit(e),
       }),
       loginLink: new Link({
-        text: 'Sign in',
-        href: '#',
-        variant: 'primary',
+        text: "Sign in",
+        href: "#",
+        variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo('login');
+          window.router.go("/");
         },
       }),
     });
@@ -84,7 +84,7 @@ export class RegisterPage extends Block<RegisterPageProps> {
     });
 
     if (!isValid) {
-      console.log('Форма содержит ошибки');
+      console.log("Форма содержит ошибки");
       return;
     }
 
@@ -97,7 +97,9 @@ export class RegisterPage extends Block<RegisterPageProps> {
       password: (this.children.passwordInput as Input).getValue(),
     };
 
-    console.log('Registration data:', data);
+    console.log("Registration data:", data);
+
+    window.router.go("/");
 
     if (this.props.onSubmit) {
       this.props.onSubmit(data);

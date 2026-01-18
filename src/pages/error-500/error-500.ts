@@ -1,19 +1,19 @@
-import { Block } from '../../core';
-import { Link } from '../../components/link';
-import type { Error500PageProps } from './types';
-import template from './error-500.hbs?raw';
+import { Block } from "../../core";
+import { Link } from "../../components/link";
+import type { Error500PageProps } from "./types";
+import template from "./error-500.hbs?raw";
 
 export class Error500Page extends Block<Error500PageProps> {
-  constructor(props: Error500PageProps) {
-    super('div', {
+  constructor(props?: Error500PageProps) {
+    super("div", {
       ...props,
       backLink: new Link({
-        text: 'Назад к чатам',
-        href: '#',
-        variant: 'primary',
+        text: "Назад к чатам",
+        href: "#",
+        variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo('login');
+          window.router.go("/");
         },
       }),
     });

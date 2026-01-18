@@ -6,7 +6,7 @@ import type { LoginPageProps } from "./types";
 import template from "./login.hbs?raw";
 
 export class LoginPage extends Block<LoginPageProps> {
-  constructor(props: LoginPageProps) {
+  constructor(props?: LoginPageProps) {
     super("div", {
       ...props,
       loginInput: new Input({
@@ -40,7 +40,7 @@ export class LoginPage extends Block<LoginPageProps> {
         variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo("register");
+          window.router.go("/sign-up");
         },
       }),
     });
@@ -66,6 +66,9 @@ export class LoginPage extends Block<LoginPageProps> {
     };
 
     console.log("Login data:", data);
+
+    // после успешной авторизации идем в чаты
+    window.router.go("/messenger");
 
     if (this.props.onSubmit) {
       this.props.onSubmit(data);

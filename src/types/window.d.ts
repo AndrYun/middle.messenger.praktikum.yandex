@@ -1,6 +1,7 @@
+import type { Router } from "../core";
 declare global {
   interface Window {
-    navigateTo: (pageName: string) => void;
+    router: Router;
   }
 }
 

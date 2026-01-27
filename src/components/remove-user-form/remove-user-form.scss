@@ -11,7 +11,9 @@
   }
 
   &__list {
+    // first declaration
     @include flex-column($spacing-xs);
+
     max-height: 300px;
     overflow-y: auto;
     padding: $spacing-xs;

@@ -1,0 +1,15 @@
+<div class="remove-user-form">
+  {{#if isLoading}}
+    <p class="remove-user-form__loading">Загрузка пользователей...</p>
+  {{else}}
+    {{#if hasUsers}}
+      <div class="remove-user-form__title">Выберите пользователя для удаления:</div>
+      <div class="remove-user-form__list">
+        <div data-id="userList"></div>
+      </div>
+      <div data-id="removeButton" class="remove-user-form__button"></div>
+    {{else}}
+      <p class="remove-user-form__empty">В чате нет других пользователей</p>
+    {{/if}}
+  {{/if}}
+</div>

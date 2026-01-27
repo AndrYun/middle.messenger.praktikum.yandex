@@ -2,11 +2,31 @@ import { Block } from "../../core";
 import type { MessageInputProps } from "./types";
 import { validateField } from "../../utils/validation";
 import template from "./message-input.hbs?raw";
+import { Button } from "../button";
 
 export class MessageInput extends Block<MessageInputProps> {
   constructor(props: MessageInputProps) {
-    super("div", {
+    super("form", {
       ...props,
+      attr: {
+        class: "message-input",
+      },
+      attachButton: new Button({
+        text: "📎",
+        type: "button",
+        variant: "secondary",
+        onClick: () => {
+          if (props.onAttach) {
+            props.onAttach();
+          }
+        },
+      }),
+      sendButton: new Button({
+        text: "→",
+        type: "submit",
+        variant: "primary",
+        onClick: (e) => this.handleSubmit(e),
+      }),
       placeholder: props.placeholder || "Сообщение",
       events: {
         submit: (e: Event) => this.handleSubmit(e),
@@ -47,7 +67,6 @@ export class MessageInput extends Block<MessageInputProps> {
     if (this.props.onSubmit && message) {
       this.props.onSubmit(message);
     }
-
     this.clear();
   }
 
@@ -61,11 +80,11 @@ export class MessageInput extends Block<MessageInputProps> {
 
   // очищаем поле
   public clear(): void {
-    const input = this.element?.querySelector<HTMLInputElement>(
+    const textarea = this.element?.querySelector<HTMLTextAreaElement>(
       ".message-input__field"
     );
-    if (input) {
-      input.value = "";
+    if (textarea) {
+      textarea.value = "";
     }
   }
 

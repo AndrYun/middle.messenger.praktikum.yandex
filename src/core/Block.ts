@@ -1,13 +1,13 @@
-import Handlebars from 'handlebars';
-import { nanoid } from 'nanoid';
-import { EventBus } from './EventBus';
+import Handlebars from "handlebars";
+import { nanoid } from "nanoid";
+import { EventBus } from "./EventBus";
 
 // События жизненного цикла компонента
 export enum BlockEvents {
-  INIT = 'init',
-  FLOW_CDM = 'flow:component-did-mount',
-  FLOW_CDU = 'flow:component-did-update',
-  FLOW_RENDER = 'flow:render',
+  INIT = "init",
+  FLOW_CDM = "flow:component-did-mount",
+  FLOW_CDU = "flow:component-did-update",
+  FLOW_RENDER = "flow:render",
 }
 
 export interface BlockProps {
@@ -27,7 +27,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
   protected lists: Record<string, unknown[]>;
   public id: string;
 
-  constructor(tagName: string = 'div', propsAndChildren: P = {} as P) {
+  constructor(tagName: string = "div", propsAndChildren: P = {} as P) {
     const eventBus = new EventBus();
 
     const { children, props, lists } = this._getChildren(propsAndChildren);
@@ -57,8 +57,9 @@ export abstract class Block<P extends BlockProps = BlockProps> {
       if (value instanceof Block) {
         children[key] = value;
       } else if (
-        Array.isArray(value)
-        && value.every((item) => item instanceof Block)
+        Array.isArray(value) &&
+        value.length > 0 && // ✅ Проверяем что массив не пустой
+        value.every((item) => item instanceof Block)
       ) {
         children[key] = value;
       } else if (Array.isArray(value)) {
@@ -155,11 +156,11 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     }
 
     this._removeEvents();
-    this._element.innerHTML = '';
+    this._element.innerHTML = "";
 
     const template = Handlebars.compile(block);
     const fragment = this._createDocumentElement(
-      'template',
+      "template"
     ) as HTMLTemplateElement;
     fragment.innerHTML = template({ ...this.props, ...this.lists });
 
@@ -208,7 +209,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     return new Proxy(props, {
       get: (target, prop: string) => {
         const value = target[prop];
-        return typeof value === 'function' ? value.bind(target) : value;
+        return typeof value === "function" ? value.bind(target) : value;
       },
       set: (target, prop: string, value) => {
         const oldProps = { ...target };
@@ -217,7 +218,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
         return true;
       },
       deleteProperty: () => {
-        throw new Error('Нет доступа');
+        throw new Error("Нет доступа");
       },
     });
   }
@@ -255,7 +256,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
   public show(): void {
     const content = this.getContent();
     if (content) {
-      content.style.display = 'block';
+      content.style.display = "block";
     }
   }
 
@@ -263,7 +264,11 @@ export abstract class Block<P extends BlockProps = BlockProps> {
   public hide(): void {
     const content = this.getContent();
     if (content) {
-      content.style.display = 'none';
+      content.style.display = "none";
     }
+  }
+
+  public getProps(): P {
+    return this.props;
   }
 }

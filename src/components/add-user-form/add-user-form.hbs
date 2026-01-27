@@ -1,6 +1,17 @@
-<form class='add-user-form'>
-  <div data-id='loginInput'></div>
-  <div class='add-user-form__actions'>
-    <div data-id='submitButton'></div>
+<div class="add-user-form">
+  <div data-id="loginInput"></div>
+
+  {{#if foundUser}}
+    <div class="add-user-form__found">
+      <p>Найден:
+        <strong>{{foundUser.login}}</strong>
+        ({{foundUser.first_name}}
+        {{foundUser.second_name}})</p>
+    </div>
+  {{/if}}
+
+  <div class="add-user-form__actions">
+    <div data-id="searchButton"></div>
+    <div data-id="submitButton"></div>
   </div>
-</form>
+</div>

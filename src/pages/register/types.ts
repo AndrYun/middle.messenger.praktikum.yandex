@@ -1,12 +1,12 @@
-import type { BlockProps } from '../../core';
+import type { BlockProps } from "../../core";
 
 export interface RegisterData {
   email: string;
-  login: string;
   first_name: string;
-  second_name: string;
-  phone: string;
+  login: string;
   password: string;
+  phone: string;
+  second_name: string;
 }
 
 export interface RegisterPageProps extends BlockProps {

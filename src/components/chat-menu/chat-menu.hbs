@@ -1,17 +1,19 @@
-<nav class="chat-menu {{#if isOpen}}chat-menu--open{{/if}}">
-  <button class="chat-menu__item" type="button" data-action="add">
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <circle cx="11" cy="11" r="10" stroke="#3369F3" stroke-width="2"/>
-      <path d="M11 7V15M7 11H15" stroke="#3369F3" stroke-width="2"/>
-    </svg>
-    <span>Добавить пользователя</span>
-  </button>
-  
-  <button class="chat-menu__item chat-menu__item--danger" type="button" data-action="remove">
-    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-      <circle cx="11" cy="11" r="10" stroke="#FF0000" stroke-width="2"/>
-      <path d="M7 11H15" stroke="#FF0000" stroke-width="2"/>
-    </svg>
-    <span>Удалить пользователя</span>
-  </button>
-</nav>
+<button class="chat-menu__item" type="button" data-action="add">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <circle cx="11" cy="11" r="10" stroke="#3369F3" stroke-width="2" />
+    <path d="M11 7V15M7 11H15" stroke="#3369F3" stroke-width="2" />
+  </svg>
+  <span>Добавить пользователя</span>
+</button>
+
+<button
+  class="chat-menu__item chat-menu__item--danger"
+  type="button"
+  data-action="remove"
+>
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+    <circle cx="11" cy="11" r="10" stroke="#FF0000" stroke-width="2" />
+    <path d="M7 11H15" stroke="#FF0000" stroke-width="2" />
+  </svg>
+  <span>Удалить пользователя</span>
+</button>

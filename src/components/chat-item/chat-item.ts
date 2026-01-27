@@ -1,18 +1,20 @@
-import { Block } from '../../core';
-import { Avatar } from '../avatar';
-import type { ChatItemProps } from './types';
-import template from './chat-item.hbs?raw';
+import { Block } from "../../core";
+import { Avatar } from "../avatar";
+import type { ChatItemProps } from "./types";
+import template from "./chat-item.hbs?raw";
 
 export class ChatItem extends Block<ChatItemProps> {
   constructor(props: ChatItemProps) {
-    super('div', {
+    super("div", {
       ...props,
-      avatar:
-        props.avatar
-        || new Avatar({
-          size: 'medium',
-          alt: props.name,
-        }),
+      // avatar: new Avatar({
+      //   avatar: props.avatar,
+      //   size: "medium",
+      //   first_name: props.name,
+      // }),
+      attr: {
+        class: `chat-item ${props.active ? "chat-item--active" : ""}`,
+      },
       events: {
         click: () => {
           if (props.onClick) {
@@ -20,6 +22,14 @@ export class ChatItem extends Block<ChatItemProps> {
           }
         },
       },
+    });
+
+    this.setProps({
+      avatarComponent: new Avatar({
+        avatar: props.avatar || undefined,
+        size: "medium",
+        firstName: props.name,
+      }),
     });
   }
 

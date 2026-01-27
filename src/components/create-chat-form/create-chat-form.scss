@@ -1,0 +1,10 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.create-chat-form {
+  @include flex-column($spacing-md);
+
+  &__submit {
+    align-self: flex-end;
+  }
+}

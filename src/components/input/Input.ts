@@ -7,6 +7,7 @@ export class Input extends Block<InputProps> {
   constructor(props: InputProps) {
     super("div", {
       ...props,
+      value: props.value || "",
       events: {
         input: (e: Event) => this.handleInput(e),
         focus: () => this.handleFocus(),
@@ -21,6 +22,8 @@ export class Input extends Block<InputProps> {
     if (!(target instanceof HTMLInputElement)) {
       return;
     }
+
+    this.setProps({ value: target.value });
 
     if (this.props.onInput) {
       this.props.onInput(target.value);
@@ -54,13 +57,60 @@ export class Input extends Block<InputProps> {
     }
   }
 
+  // переопределяем componentDidUpdate
+  protected componentDidUpdate(
+    oldProps: InputProps,
+    newProps: InputProps
+  ): boolean {
+    // сравниваем старые и новые знач пропсов
+    const onlyValueChanged =
+      oldProps.value !== newProps.value &&
+      oldProps.error === newProps.error &&
+      oldProps.label === newProps.label &&
+      oldProps.placeholder === newProps.placeholder;
+
+    if (onlyValueChanged) {
+      // если изменился только value апдейтим его вручную в Доме
+      const input = this.element?.querySelector<HTMLInputElement>("input");
+      if (input && input.value !== newProps.value) {
+        // сейвим позицию курсора
+        const selectionStart = input.selectionStart;
+        const selectionEnd = input.selectionEnd;
+
+        input.value = newProps.value || "";
+
+        // воскрешаем позицию курсора
+        if (selectionStart !== null && selectionEnd !== null) {
+          input.setSelectionRange(selectionStart, selectionEnd);
+        }
+      }
+
+      return false; // не ререндерим
+    }
+
+    // Если изменилось что-то другое (error, label и т.д.) - делаем ре-рендер
+    return true;
+  }
+
   public getValue(): string {
-    const input = this.element?.querySelector<HTMLInputElement>("input");
-    return input?.value || "";
+    if (this.props.value) {
+      return this.props.value;
+    }
+
+    const input = this.element?.querySelector<HTMLInputElement>(".input");
+
+    if (!input) {
+      console.error("Input element not found in", this.element);
+      return "";
+    }
+
+    return input.value.trim();
   }
 
   public setValue(value: string): void {
-    const input = this.element?.querySelector<HTMLInputElement>("input");
+    this.setProps({ value });
+
+    const input = this.element?.querySelector<HTMLInputElement>(".input");
     if (input) {
       input.value = value;
     }

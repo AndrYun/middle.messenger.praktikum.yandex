@@ -5,24 +5,44 @@ import { Modal } from "../../components/modal";
 import { AvatarUpload } from "../../components/avatar-upload";
 import type { ProfilePageProps } from "./types";
 import template from "./profile.hbs?raw";
+import { AuthAPI } from "../../api/AuthApi";
+import { store } from "../../store/Store";
+import { UserAPI } from "../../api";
+import { ProfileData } from "./types";
+import { Avatar } from "../../components/avatar";
 
 export class ProfilePage extends Block<ProfilePageProps> {
-  constructor(props: ProfilePageProps) {
-    const defaultData = props.data || {
-      email: "pochta@yandex.ru",
-      login: "ivanivanov",
-      first_name: "Иван",
-      second_name: "Иванов",
-      display_name: "Иван",
-      phone: "+7 (999) 999 99 99",
+  constructor(props?: ProfilePageProps) {
+    const currentUser = store.getState().user;
+    const defaultData = props?.data || {
+      email: currentUser?.email || "",
+      login: currentUser?.login || "",
+      first_name: currentUser?.first_name || "",
+      second_name: currentUser?.second_name || "",
+      display_name: currentUser?.display_name || "",
+      phone: currentUser?.phone || "",
+      avatar: currentUser?.avatar || "",
     };
 
     // cоздаем компонент загрузки аватара
     const avatarUpload = new AvatarUpload({
-      onChange: (file) => {
+      onChange: async (file) => {
         console.log("File selected:", file);
-        if (props.onAvatarClick) {
-          props.onAvatarClick();
+
+        try {
+          const updatedUser = await UserAPI.updateAvatar(file);
+
+          store.setUser(updatedUser);
+
+          console.log("✅ Avatar updated:", updatedUser);
+
+          // закрываем модалку
+          avatarModal.close();
+
+          // обновляем страницу чтобы показать новый аватар
+          window.router.go("/settings");
+        } catch (error: any) {
+          alert("Ошибка при загрузке аватара");
         }
       },
     });
@@ -32,68 +52,71 @@ export class ProfilePage extends Block<ProfilePageProps> {
       title: "Загрузите файл",
       isOpen: false,
       content: avatarUpload,
-      onClose: () => {
-        avatarUpload.reset();
-      },
     });
+
+    const data = props?.data || defaultData;
 
     super("div", {
       ...props,
-      data: defaultData,
+      data,
       avatarModal,
+      profileAvatar: new Avatar({
+        avatar: data.avatar,
+        first_name: data.first_name,
+        size: "large",
+        onClick: () => {
+          avatarModal.open();
+        },
+      }),
       emailField: new ProfileField({
         label: "Почта",
-        value: defaultData.email,
+        value: data.email,
       }),
       loginField: new ProfileField({
         label: "Логин",
-        value: defaultData.login,
+        value: data.login,
       }),
       firstNameField: new ProfileField({
         label: "Имя",
-        value: defaultData.first_name,
+        value: data.first_name,
       }),
       secondNameField: new ProfileField({
         label: "Фамилия",
-        value: defaultData.second_name,
+        value: data.second_name,
       }),
       displayNameField: new ProfileField({
         label: "Имя в чате",
-        value: defaultData.display_name,
+        value: data.display_name,
       }),
       phoneField: new ProfileField({
         label: "Телефон",
-        value: defaultData.phone,
+        value: data.phone,
       }),
       editLink: new Link({
         text: "Изменить данные",
-        href: "#",
+        href: "/profile-edit",
         variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo("profile-edit");
+          window.router.go("/profile-edit");
         },
       }),
       passwordLink: new Link({
         text: "Изменить пароль",
-        href: "#",
+        href: "/profile-password",
         variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo("profile-password");
+          window.router.go("/profile-password");
         },
       }),
       logoutLink: new Link({
         text: "Выйти",
-        href: "#",
+        href: "/",
         variant: "danger",
         onClick: (e) => {
           e.preventDefault();
-          if (props.onLogout) {
-            props.onLogout();
-          } else {
-            window.navigateTo("login");
-          }
+          this.handleLogout();
         },
       }),
       events: {
@@ -109,10 +132,12 @@ export class ProfilePage extends Block<ProfilePageProps> {
       return;
     }
 
+    const backButton = target.closest(".profile-page__back");
+
     // вернуться
-    if (target.closest(".profile-page__back")) {
+    if (backButton) {
       e.preventDefault();
-      window.navigateTo("login");
+      window.router.go("/messenger");
       return;
     }
 
@@ -122,6 +147,61 @@ export class ProfilePage extends Block<ProfilePageProps> {
         modal.open();
       }
     }
+  }
+
+  private async handleLogout(): Promise<void> {
+    try {
+      await AuthAPI.logout();
+      store.setUser(null);
+      window.router.go("/");
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  protected componentDidMount(): void {
+    // ✅ Подписываемся на изменения store
+    store.subscribe(() => {
+      this.updateUserData();
+    });
+  }
+
+  private updateUserData(): void {
+    const currentUser = store.getState().user;
+
+    if (!currentUser) {
+      return;
+    }
+
+    const data: ProfileData = {
+      email: currentUser.email,
+      login: currentUser.login,
+      first_name: currentUser.first_name,
+      second_name: currentUser.second_name,
+      display_name: currentUser.display_name,
+      phone: currentUser.phone,
+      avatar: currentUser.avatar,
+    };
+
+    this.setProps({ data });
+
+    // апдейтим все поля
+    (this.children.profileAvatar as Avatar).setProps({
+      avatar: data.avatar,
+      firstName: data.first_name,
+    });
+    (this.children.emailField as ProfileField).setProps({ value: data.email });
+    (this.children.loginField as ProfileField).setProps({ value: data.login });
+    (this.children.firstNameField as ProfileField).setProps({
+      value: data.first_name,
+    });
+    (this.children.secondNameField as ProfileField).setProps({
+      value: data.second_name,
+    });
+    (this.children.displayNameField as ProfileField).setProps({
+      value: data.display_name,
+    });
+    (this.children.phoneField as ProfileField).setProps({ value: data.phone });
   }
 
   protected render(): string {

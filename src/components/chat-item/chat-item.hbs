@@ -1,20 +1,18 @@
-<div class="chat-item {{#if active}}chat-item--active{{/if}}">
-  <div class="chat-item__avatar">
-    <div data-id="avatar"></div>
+<div class="chat-item__avatar">
+  <div data-id="avatarComponent"></div>
+</div>
+
+<div class="chat-item__content">
+  <div class="chat-item__header">
+    <span class="chat-item__name">{{name}}</span>
+    <span class="chat-item__time">{{time}}</span>
   </div>
-  
-  <div class="chat-item__content">
-    <div class="chat-item__header">
-      <span class="chat-item__name">{{name}}</span>
-      <span class="chat-item__time">{{time}}</span>
-    </div>
-    <div class="chat-item__footer">
-      <span class="chat-item__message">
-        {{#if isYou}}<strong>Вы:</strong> {{/if}}{{lastMessage}}
-      </span>
-      {{#if unreadCount}}
-        <span class="chat-item__unread">{{unreadCount}}</span>
-      {{/if}}
-    </div>
+  <div class="chat-item__footer">
+    <span class="chat-item__message">
+      {{#if isYou}}<strong>Вы:</strong> {{/if}}{{lastMessage}}
+    </span>
+    {{#if unreadCount}}
+      <span class="chat-item__unread">{{unreadCount}}</span>
+    {{/if}}
   </div>
 </div>

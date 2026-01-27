@@ -1,69 +1,71 @@
-import { Block } from '../../core';
-import { Button } from '../../components/button';
-import { Input } from '../../components/input';
-import { Link } from '../../components/link';
-import type { RegisterPageProps, RegisterData } from './types';
-import template from './register.hbs?raw';
+import { Block } from "../../core";
+import { Button } from "../../components/button";
+import { Input } from "../../components/input";
+import { Link } from "../../components/link";
+import type { RegisterPageProps, RegisterData } from "./types";
+import template from "./register.hbs?raw";
+import { store } from "../../store/Store";
+import { AuthAPI } from "../../api/AuthApi";
 
 export class RegisterPage extends Block<RegisterPageProps> {
   constructor(props: RegisterPageProps) {
-    super('div', {
+    super("div", {
       ...props,
       emailInput: new Input({
-        label: 'Почта',
-        type: 'email',
-        name: 'email',
-        placeholder: 'pochta@yandex.ru',
+        label: "Почта",
+        type: "email",
+        name: "email",
+        placeholder: "pochta@yandex.ru",
       }),
       loginInput: new Input({
-        label: 'Логин',
-        type: 'text',
-        name: 'login',
-        placeholder: 'ivanivanov',
+        label: "Логин",
+        type: "text",
+        name: "login",
+        placeholder: "ivanivanov",
       }),
       firstNameInput: new Input({
-        label: 'Имя',
-        type: 'text',
-        name: 'first_name',
-        placeholder: 'Иван',
+        label: "Имя",
+        type: "text",
+        name: "first_name",
+        placeholder: "Иван",
       }),
       secondNameInput: new Input({
-        label: 'Фамилия',
-        type: 'text',
-        name: 'second_name',
-        placeholder: 'Иванов',
+        label: "Фамилия",
+        type: "text",
+        name: "second_name",
+        placeholder: "Иванов",
       }),
       phoneInput: new Input({
-        label: 'Телефон',
-        type: 'tel',
-        name: 'phone',
-        placeholder: '+7 (999) 999 99 99',
+        label: "Телефон",
+        type: "tel",
+        name: "phone",
+        placeholder: "+7 (999) 999 99 99",
       }),
       passwordInput: new Input({
-        label: 'Пароль',
-        type: 'password',
-        name: 'password',
-        placeholder: '••••••••••••',
+        label: "Пароль",
+        type: "password",
+        name: "password",
+        placeholder: "••••••••••••",
       }),
       submitButton: new Button({
-        text: 'Create account',
-        type: 'submit',
-        variant: 'primary',
+        text: "Create account",
+        type: "submit",
+        variant: "primary",
         onClick: (e) => this.handleSubmit(e),
       }),
       loginLink: new Link({
-        text: 'Sign in',
-        href: '#',
-        variant: 'primary',
+        text: "Sign in",
+        href: "#",
+        variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo('login');
+          window.router.go("/");
         },
       }),
     });
   }
 
-  private handleSubmit(e: MouseEvent): void {
+  private async handleSubmit(e: MouseEvent): Promise<void> {
     e.preventDefault();
 
     // Валидируем все поля
@@ -84,23 +86,36 @@ export class RegisterPage extends Block<RegisterPageProps> {
     });
 
     if (!isValid) {
-      console.log('Форма содержит ошибки');
       return;
     }
 
     const data: RegisterData = {
-      email: (this.children.emailInput as Input).getValue(),
-      login: (this.children.loginInput as Input).getValue(),
-      first_name: (this.children.firstNameInput as Input).getValue(),
-      second_name: (this.children.secondNameInput as Input).getValue(),
-      phone: (this.children.phoneInput as Input).getValue(),
-      password: (this.children.passwordInput as Input).getValue(),
+      email: (this.children.emailInput as Input).getValue().trim(),
+      login: (this.children.loginInput as Input).getValue().trim(),
+      first_name: (this.children.firstNameInput as Input).getValue().trim(),
+      second_name: (this.children.secondNameInput as Input).getValue().trim(),
+      phone: (this.children.phoneInput as Input).getValue().trim(),
+      password: (this.children.passwordInput as Input).getValue().trim(),
     };
 
-    console.log('Registration data:', data);
+    const submitButton = this.children.submitButton as Button;
+    submitButton.setProps({ disabled: true, text: "Creating..." });
 
-    if (this.props.onSubmit) {
-      this.props.onSubmit(data);
+    try {
+      await AuthAPI.signup(data);
+
+      const user = await AuthAPI.getUser();
+
+      // сохраняем в стор юзера
+      store.setUser(user);
+
+      // после успешной регистрации идем в чаты
+      window.router.go("/messenger");
+    } catch (error: any) {
+      const errorMessage = error?.reason || "Ошибка регистрации";
+      alert(errorMessage);
+    } finally {
+      submitButton.setProps({ disabled: false, text: "Create account" });
     }
   }
 

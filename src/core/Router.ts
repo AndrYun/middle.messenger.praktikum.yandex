@@ -33,11 +33,10 @@ export class Router {
     this.onRoute(window.location.pathname);
   }
 
-  private onRoute(pathname: string): void {
+  private async onRoute(pathname: string): Promise<void> {
     const route = this.getRoute(pathname);
 
     if (!route) {
-      // если маршрут не найден, перенаправляем на 404
       const notFoundRoute = this.getRoute("/404");
       if (notFoundRoute) {
         this.currentRoute = notFoundRoute;
@@ -46,7 +45,6 @@ export class Router {
       return;
     }
 
-    // уходим со старой страницы
     if (this.currentRoute && this.currentRoute !== route) {
       this.currentRoute.leave();
     }

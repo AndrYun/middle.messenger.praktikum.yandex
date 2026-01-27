@@ -1,17 +1,25 @@
 import { Block } from "../../core";
-import { AvatarUpload } from "../../components/avatar-upload";
 import { Input } from "../../components/input";
 import { Button } from "../../components/button";
 import type { ProfilePasswordPageProps, PasswordChangeData } from "./types";
 import template from "./profile-password.hbs?raw";
+import { UserAPI } from "../../api";
+import { Avatar } from "../../components/avatar";
+import { store } from "../../store";
 
 export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
   constructor(props?: ProfilePasswordPageProps) {
+    const currentUser = store.getState().user;
+
+    const data = currentUser;
+
     super("div", {
       ...props,
-      avatar: new AvatarUpload({
+      data,
+      profileAvatar: new Avatar({
         size: "large",
-        alt: "User avatar",
+        first_name: currentUser?.first_name,
+        avatar: currentUser?.avatar,
       }),
       oldPasswordInput: new Input({
         label: "Старый пароль",
@@ -58,7 +66,7 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
     }
   }
 
-  private handleSubmit(e: MouseEvent): void {
+  private async handleSubmit(e: MouseEvent): Promise<void> {
     e.preventDefault();
 
     const oldPasswordInput = this.children.oldPasswordInput as Input;
@@ -91,13 +99,32 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
       newPassword,
     };
 
-    console.log("Password change:", data);
+    const submitButton = this.children.submitButton as Button;
+    submitButton.setProps({ disabled: true, text: "Сохранение..." });
 
-    if (this.props.onSubmit) {
-      this.props.onSubmit(data);
-    } else {
-      alert("Пароль изменен!");
+    try {
+      // ✅ Отправляем запрос на изменение пароля
+      await UserAPI.changePassword(data);
+
+      if (this.props?.onSubmit) {
+        this.props.onSubmit(data);
+      }
+      alert("Пароль успешно изменен!");
       window.router.go("/settings");
+    } catch (error: any) {
+      let errorMessage = "Ошибка при изменении пароля";
+
+      if (error?.reason === "Password is incorrect") {
+        errorMessage = "Неверный старый пароль";
+      } else if (error?.reason) {
+        errorMessage = error.reason;
+      }
+
+      oldPasswordInput.setProps({
+        error: errorMessage,
+      });
+    } finally {
+      submitButton.setProps({ disabled: false, text: "Сохранить" });
     }
   }
 

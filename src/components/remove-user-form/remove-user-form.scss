@@ -1,0 +1,32 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.remove-user-form {
+  @include flex-column($spacing-md);
+
+  &__title {
+    font-size: $font-size-base;
+    font-weight: 500;
+    margin-bottom: $spacing-xs;
+  }
+
+  &__list {
+    @include flex-column($spacing-xs);
+    max-height: 300px;
+    overflow-y: auto;
+    padding: $spacing-xs;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+  }
+
+  &__button {
+    align-self: flex-end;
+  }
+
+  &__loading,
+  &__empty {
+    color: $color-text-secondary;
+    text-align: center;
+    padding: $spacing-lg;
+  }
+}

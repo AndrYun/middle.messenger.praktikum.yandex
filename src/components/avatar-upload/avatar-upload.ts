@@ -52,6 +52,11 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
     if (file) {
       this.selectedFile = file;
 
+      this.setProps({
+        error: undefined,
+        fileName: undefined,
+      });
+
       // Валидация типа файла
       if (!file.type.startsWith("image/")) {
         this.setProps({
@@ -83,16 +88,30 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
     }
   }
 
-  private handleSubmit(): void {
+  private async handleSubmit(): Promise<void> {
     if (!this.selectedFile) {
       this.setProps({ error: "Нужно выбрать файл" });
       return;
     }
 
+    const submitButton = this.children.submitButton as Button;
+    submitButton.setProps({ disabled: true, text: "Загрузка..." });
+
+    try {
+      if (this.props.onChange) {
+        await this.props.onChange(this.selectedFile);
+      }
+
+      this.reset();
+    } catch (error: any) {
+      const errorMessage = error?.reason || "Ошибка при загрузке файла";
+      this.setProps({ error: errorMessage });
+
+      submitButton.setProps({ disabled: false, text: "Поменять" });
+    }
+
     // пока просто выводим в консоль
     console.log("Uploading file:", this.selectedFile.name);
-
-    alert(`Файл ${this.selectedFile.name} готов к загрузке`);
   }
 
   // Получить выбранный файл

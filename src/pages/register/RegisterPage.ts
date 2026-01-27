@@ -4,6 +4,8 @@ import { Input } from "../../components/input";
 import { Link } from "../../components/link";
 import type { RegisterPageProps, RegisterData } from "./types";
 import template from "./register.hbs?raw";
+import { store } from "../../store/Store";
+import { AuthAPI } from "../../api/AuthApi";
 
 export class RegisterPage extends Block<RegisterPageProps> {
   constructor(props: RegisterPageProps) {
@@ -63,7 +65,7 @@ export class RegisterPage extends Block<RegisterPageProps> {
     });
   }
 
-  private handleSubmit(e: MouseEvent): void {
+  private async handleSubmit(e: MouseEvent): Promise<void> {
     e.preventDefault();
 
     // Валидируем все поля
@@ -84,25 +86,36 @@ export class RegisterPage extends Block<RegisterPageProps> {
     });
 
     if (!isValid) {
-      console.log("Форма содержит ошибки");
       return;
     }
 
     const data: RegisterData = {
-      email: (this.children.emailInput as Input).getValue(),
-      login: (this.children.loginInput as Input).getValue(),
-      first_name: (this.children.firstNameInput as Input).getValue(),
-      second_name: (this.children.secondNameInput as Input).getValue(),
-      phone: (this.children.phoneInput as Input).getValue(),
-      password: (this.children.passwordInput as Input).getValue(),
+      email: (this.children.emailInput as Input).getValue().trim(),
+      login: (this.children.loginInput as Input).getValue().trim(),
+      first_name: (this.children.firstNameInput as Input).getValue().trim(),
+      second_name: (this.children.secondNameInput as Input).getValue().trim(),
+      phone: (this.children.phoneInput as Input).getValue().trim(),
+      password: (this.children.passwordInput as Input).getValue().trim(),
     };
 
-    console.log("Registration data:", data);
+    const submitButton = this.children.submitButton as Button;
+    submitButton.setProps({ disabled: true, text: "Creating..." });
 
-    window.router.go("/");
+    try {
+      await AuthAPI.signup(data);
 
-    if (this.props.onSubmit) {
-      this.props.onSubmit(data);
+      const user = await AuthAPI.getUser();
+
+      // сохраняем в стор юзера
+      store.setUser(user);
+
+      // после успешной регистрации идем в чаты
+      window.router.go("/messenger");
+    } catch (error: any) {
+      const errorMessage = error?.reason || "Ошибка регистрации";
+      alert(errorMessage);
+    } finally {
+      submitButton.setProps({ disabled: false, text: "Create account" });
     }
   }
 

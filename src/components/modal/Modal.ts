@@ -6,6 +6,9 @@ export class Modal extends Block<ModalProps> {
   constructor(props: ModalProps) {
     super("div", {
       ...props,
+      attr: {
+        class: `modal ${props.isOpen ? "modal--open" : ""}`,
+      },
       isOpen: props.isOpen || false,
       events: {
         click: (e: Event) => this.handleOverlayClick(e),
@@ -25,8 +28,17 @@ export class Modal extends Block<ModalProps> {
     }
   }
 
-  public open(): void {
+  public async open(): Promise<void> {
     this.setProps({ isOpen: true });
+    this.element?.classList.add("modal--open");
+
+    if (this.props.onOpen && typeof this.props.onOpen === "function") {
+      setTimeout(async () => {
+        if (this.props.onOpen) {
+          await this.props.onOpen();
+        }
+      }, 0);
+    }
   }
 
   public close(): void {

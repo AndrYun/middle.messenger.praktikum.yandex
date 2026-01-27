@@ -14,11 +14,6 @@ type Options = {
 
 type OptionsWithoutMethod = Omit<Options, "method">;
 
-type HTTPMethod = (
-  url: string,
-  options?: OptionsWithoutMethod
-) => Promise<unknown>;
-
 function queryStringify(
   data: Record<string, string | number | boolean>
 ): string {
@@ -37,14 +32,35 @@ function queryStringify(
 }
 
 class HTTPTransport {
-  private createMethod(method: METHODS): HTTPMethod {
-    return (url, options = {}) => this.request(url, { ...options, method });
+  private apiUrl = "https://ya-praktikum.tech/api/v2";
+
+  public get<R = unknown>(
+    url: string,
+    options?: OptionsWithoutMethod
+  ): Promise<R> {
+    return this.request<R>(url, { ...options, method: METHODS.GET });
   }
 
-  public get = this.createMethod(METHODS.GET);
-  public post = this.createMethod(METHODS.POST);
-  public put = this.createMethod(METHODS.PUT);
-  public delete = this.createMethod(METHODS.DELETE);
+  public post<R = unknown>(
+    url: string,
+    options?: OptionsWithoutMethod
+  ): Promise<R> {
+    return this.request<R>(url, { ...options, method: METHODS.POST });
+  }
+
+  public put<R = unknown>(
+    url: string,
+    options?: OptionsWithoutMethod
+  ): Promise<R> {
+    return this.request<R>(url, { ...options, method: METHODS.PUT });
+  }
+
+  public delete<R = unknown>(
+    url: string,
+    options?: OptionsWithoutMethod
+  ): Promise<R> {
+    return this.request<R>(url, { ...options, method: METHODS.DELETE });
+  }
 
   private request<R = unknown>(url: string, options: Options): Promise<R> {
     const { headers = {}, method, data, timeout = 5000 } = options;
@@ -58,20 +74,54 @@ class HTTPTransport {
       const xhr = new XMLHttpRequest();
       const isGet = method === METHODS.GET;
 
+      const fullUrl = `${this.apiUrl}${url}`;
+
       const requestUrl =
         isGet && data
-          ? `${url}${queryStringify(
+          ? `${fullUrl}${queryStringify(
               data as Record<string, string | number | boolean>
             )}`
-          : url;
+          : fullUrl;
       xhr.open(method, requestUrl);
+
+      xhr.withCredentials = true;
 
       Object.keys(headers).forEach((key) => {
         xhr.setRequestHeader(key, headers[key]);
       });
 
       xhr.onload = () => {
-        resolve(xhr as R);
+        if (xhr.status === 401) {
+          // импорт store и router
+          import("../store/Store").then(({ store }) => {
+            store.setUser(null);
+          });
+
+          import("../main").then(() => {
+            if (window.router) {
+              window.router.go("/");
+            }
+          });
+
+          reject({ reason: "Unauthorized" });
+          return;
+        }
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const response = xhr.response ? JSON.parse(xhr.response) : {};
+            resolve(response as R);
+          } catch (e) {
+            resolve(xhr.response as R);
+          }
+        } else {
+          try {
+            const error = JSON.parse(xhr.response);
+            reject(error);
+          } catch (e) {
+            reject(new Error(`HTTP Error ${xhr.status}: ${xhr.statusText}`));
+          }
+        }
       };
 
       xhr.onabort = () => {
@@ -89,8 +139,13 @@ class HTTPTransport {
 
       if (isGet || !data) {
         xhr.send();
+      } else if (data instanceof FormData) {
+        xhr.send(data);
       } else {
-        xhr.send(data as XMLHttpRequestBodyInit);
+        if (!headers["Content-Type"]) {
+          xhr.setRequestHeader("Content-Type", "application/json");
+        }
+        xhr.send(JSON.stringify(data));
       }
     });
   }

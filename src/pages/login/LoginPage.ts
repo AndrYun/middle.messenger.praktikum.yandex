@@ -2,8 +2,10 @@ import { Block } from "../../core";
 import { Button } from "../../components/button";
 import { Input } from "../../components/input";
 import { Link } from "../../components/link";
-import type { LoginPageProps } from "./types";
+import type { LoginFormData, LoginPageProps } from "./types";
 import template from "./login.hbs?raw";
+import { AuthAPI } from "../../api/AuthApi";
+import { store } from "../../store/Store";
 
 export class LoginPage extends Block<LoginPageProps> {
   constructor(props?: LoginPageProps) {
@@ -14,7 +16,6 @@ export class LoginPage extends Block<LoginPageProps> {
         type: "text",
         name: "login",
         placeholder: "ivanivanov",
-        value: "ivanivanov",
         onBlur: () => {
           (this.children.loginInput as Input).validate();
         },
@@ -46,7 +47,7 @@ export class LoginPage extends Block<LoginPageProps> {
     });
   }
 
-  private handleSubmit(e: MouseEvent): void {
+  private async handleSubmit(e: MouseEvent): Promise<void> {
     e.preventDefault();
 
     const loginInput = this.children.loginInput as Input;
@@ -56,22 +57,33 @@ export class LoginPage extends Block<LoginPageProps> {
     const isPasswordValid = passwordInput.validate();
 
     if (!isLoginValid || !isPasswordValid) {
-      console.log("Форма содержит ошибки");
       return;
     }
 
-    const data = {
+    const data: LoginFormData = {
       login: loginInput.getValue(),
       password: passwordInput.getValue(),
     };
 
-    console.log("Login data:", data);
+    const submitButton = this.children.submitButton as Button;
+    submitButton.setProps({ disabled: true, text: "Please wait..." });
 
-    // после успешной авторизации идем в чаты
-    window.router.go("/messenger");
+    try {
+      await AuthAPI.signin(data);
 
-    if (this.props.onSubmit) {
-      this.props.onSubmit(data);
+      const user = await AuthAPI.getUser();
+
+      // сохраняем юзера в стор
+      store.setUser(user);
+
+      // после успешной авторизации идем в чаты
+      window.router.go("/messenger");
+    } catch (error: any) {
+      const errorMessage = error?.reason || "Ошибка авторизации";
+
+      passwordInput.setProps({ error: errorMessage });
+    } finally {
+      submitButton.setProps({ disabled: false, text: "Авторизоваться" });
     }
   }
 

@@ -38,8 +38,8 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     this.id = nanoid(6);
 
     this._meta = { tagName, props: props as P };
-    this.props = this._makePropsProxy(props as P);
     this.eventBus = eventBus;
+    this.props = this._makePropsProxy(props as P);
 
     this._registerEvents(eventBus);
     eventBus.emit(Block.EVENTS.INIT);
@@ -202,33 +202,63 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     return this.element;
   }
 
+  // private _makePropsProxy(props: P): P {
+  //   const self = this;
+
+  //   return new Proxy(props, {
+  //     get(target, prop: string | symbol): unknown {
+  //       // символы (например, util.inspect) — отдаём как есть
+  //       if (typeof prop !== "string") {
+  //         return Reflect.get(target, prop);
+  //       }
+
+  //       const value = (target as Record<string, unknown>)[prop];
+
+  //       if (typeof value === "function") {
+  //         // value: Function, но TS держит его как unknown — безопасно приводим
+  //         return (value as (...args: unknown[]) => unknown).bind(target);
+  //       }
+
+  //       return value;
+  //     },
+
+  //     set(target, prop: string | symbol, value: unknown): boolean {
+  //       const oldProps = { ...(target as Record<string, unknown>) } as P;
+
+  //       Reflect.set(target as object, prop, value);
+
+  //       self.eventBus.emit(Block.EVENTS.FLOW_CDU, oldProps, target);
+  //       return true;
+  //     },
+
+  //     deleteProperty(): boolean {
+  //       throw new Error("Нет доступа");
+  //     },
+  //   }) as P;
+  // }
+
   private _makePropsProxy(props: P): P {
-    const self = this;
+    const eventBus = this.eventBus;
 
     return new Proxy(props, {
-      get(target, prop: string | symbol): unknown {
-        // символы (например, util.inspect) — отдаём как есть
-        if (typeof prop !== "string") {
-          return Reflect.get(target, prop);
-        }
-
-        const value = (target as Record<string, unknown>)[prop];
+      get(target, prop: string | symbol, receiver): unknown {
+        const value = Reflect.get(target as object, prop, receiver) as unknown;
 
         if (typeof value === "function") {
-          // value: Function, но TS держит его как unknown — безопасно приводим
           return (value as (...args: unknown[]) => unknown).bind(target);
         }
 
         return value;
       },
 
-      set(target, prop: string | symbol, value: unknown): boolean {
+      set(target, prop: string | symbol, value: unknown, receiver): boolean {
         const oldProps = { ...(target as Record<string, unknown>) } as P;
 
-        Reflect.set(target as object, prop, value);
+        const result = Reflect.set(target as object, prop, value, receiver);
 
-        self.eventBus.emit(Block.EVENTS.FLOW_CDU, oldProps, target);
-        return true;
+        eventBus.emit(Block.EVENTS.FLOW_CDU, oldProps, target);
+
+        return result;
       },
 
       deleteProperty(): boolean {

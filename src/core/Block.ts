@@ -22,6 +22,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
   private _element: HTMLElement | null = null;
   private _meta: { tagName: string; props: P };
   private eventBus: EventBus;
+
   protected props: P;
   protected children: Record<string, Block | Block[]>;
   protected lists: Record<string, unknown[]>;
@@ -36,11 +37,7 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     this.lists = lists;
     this.id = nanoid(6);
 
-    this._meta = {
-      tagName,
-      props: props as P,
-    };
-
+    this._meta = { tagName, props: props as P };
     this.props = this._makePropsProxy(props as P);
     this.eventBus = eventBus;
 
@@ -48,7 +45,10 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     eventBus.emit(Block.EVENTS.INIT);
   }
 
-  private _getChildren(propsAndChildren: P) {
+  private _getChildren(
+    propsAndChildren: P,
+    prevChildren?: Record<string, Block | Block[]>
+  ) {
     const children: Record<string, Block | Block[]> = {};
     const props: Record<string, unknown> = {};
     const lists: Record<string, unknown[]> = {};
@@ -56,17 +56,28 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       if (value instanceof Block) {
         children[key] = value;
-      } else if (
-        Array.isArray(value) &&
-        value.length > 0 && // ✅ Проверяем что массив не пустой
-        value.every((item) => item instanceof Block)
-      ) {
-        children[key] = value;
-      } else if (Array.isArray(value)) {
-        lists[key] = value;
-      } else {
-        props[key] = value;
+        return;
       }
+
+      if (Array.isArray(value)) {
+        const wasChildArray = Array.isArray(prevChildren?.[key]);
+        const isBlockArray =
+          value.length > 0
+            ? value.every((item) => item instanceof Block)
+            : false;
+
+        if (
+          (value.length > 0 && isBlockArray) ||
+          (value.length === 0 && wasChildArray)
+        ) {
+          children[key] = value as unknown as Block[];
+        } else {
+          lists[key] = value;
+        }
+        return;
+      }
+
+      props[key] = value;
     });
 
     return { children, props, lists };
@@ -79,35 +90,28 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
 
-  // DOM
   private _createResources(): void {
     const { tagName } = this._meta;
     this._element = this._createDocumentElement(tagName);
   }
 
-  // инициализвация
   protected init(): void {
     this._createResources();
     this.eventBus.emit(Block.EVENTS.FLOW_RENDER);
   }
 
-  // монтирование в дом
   private _componentDidMount(): void {
     this.componentDidMount();
 
     Object.values(this.children).forEach((child) => {
-      if (Array.isArray(child)) {
+      if (Array.isArray(child))
         child.forEach((ch) => ch.dispatchComponentDidMount());
-      } else {
-        child.dispatchComponentDidMount();
-      }
+      else child.dispatchComponentDidMount();
     });
   }
 
-  // переопределяем после монтирования
   protected componentDidMount(): void {}
 
-  // эммитим о монитировании компоенента
   public dispatchComponentDidMount(): void {
     this.eventBus.emit(Block.EVENTS.FLOW_CDM);
   }
@@ -119,41 +123,44 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     }
   }
 
-  // переопределение апдейта
   protected componentDidUpdate(_oldProps: P, _newProps: P): boolean {
     return true;
   }
 
   public setProps = (nextProps: Partial<P>): void => {
-    if (!nextProps) {
-      return;
-    }
+    if (!nextProps) return;
 
-    const oldProps = { ...this.props };
-    const { children, props } = this._getChildren(nextProps as P);
+    const oldProps = {
+      ...(this.props as unknown as Record<string, unknown>),
+    } as P;
 
-    if (Object.keys(children).length) {
-      Object.assign(this.children, children);
-    }
+    // Удаление ключей children/lists по null/undefined
+    Object.entries(nextProps).forEach(([key, value]) => {
+      if (value === null || value === undefined) {
+        if (key in this.children) delete this.children[key];
+        if (key in this.lists) delete this.lists[key];
+      }
+    });
 
-    if (Object.keys(props).length) {
-      Object.assign(this.props, props);
-    }
+    const { children, props, lists } = this._getChildren(
+      nextProps as P,
+      this.children
+    );
+
+    if (Object.keys(children).length) Object.assign(this.children, children);
+    if (Object.keys(props).length) Object.assign(this.props, props);
+    if (Object.keys(lists).length) Object.assign(this.lists, lists);
 
     this.eventBus.emit(Block.EVENTS.FLOW_CDU, oldProps, this.props);
   };
 
-  // получаем дом элемент компонента
   get element(): HTMLElement | null {
     return this._element;
   }
 
   private _render(): void {
     const block = this.render();
-
-    if (!this._element) {
-      return;
-    }
+    if (!this._element) return;
 
     this._removeEvents();
     this._element.innerHTML = "";
@@ -164,7 +171,6 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     ) as HTMLTemplateElement;
     fragment.innerHTML = template({ ...this.props, ...this.lists });
 
-    // меняем заглушки на реальные компоненты
     this._replaceStubs(fragment.content);
 
     this._element.appendChild(fragment.content);
@@ -172,28 +178,20 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     this._addAttributes();
   }
 
-  // меняем заглушки на реальные комп
   private _replaceStubs(fragment: DocumentFragment): void {
     Object.entries(this.children).forEach(([key, child]) => {
       const stub = fragment.querySelector(`[data-id="${key}"]`);
-
-      if (!stub) {
-        return;
-      }
+      if (!stub) return;
 
       if (Array.isArray(child)) {
         child.forEach((ch) => {
           const content = ch.getContent();
-          if (content) {
-            stub.before(content);
-          }
+          if (content) stub.before(content);
         });
         stub.remove();
       } else {
         const content = child.getContent();
-        if (content) {
-          stub.replaceWith(content);
-        }
+        if (content) stub.replaceWith(content);
       }
     });
   }
@@ -204,33 +202,47 @@ export abstract class Block<P extends BlockProps = BlockProps> {
     return this.element;
   }
 
-  // Proxy для отслеживания изменений props
   private _makePropsProxy(props: P): P {
+    const self = this;
+
     return new Proxy(props, {
-      get: (target, prop: string) => {
-        const value = target[prop];
-        return typeof value === "function" ? value.bind(target) : value;
+      get(target, prop: string | symbol): unknown {
+        // символы (например, util.inspect) — отдаём как есть
+        if (typeof prop !== "string") {
+          return Reflect.get(target, prop);
+        }
+
+        const value = (target as Record<string, unknown>)[prop];
+
+        if (typeof value === "function") {
+          // value: Function, но TS держит его как unknown — безопасно приводим
+          return (value as (...args: unknown[]) => unknown).bind(target);
+        }
+
+        return value;
       },
-      set: (target, prop: string, value) => {
-        const oldProps = { ...target };
-        target[prop as keyof P] = value;
-        this.eventBus.emit(Block.EVENTS.FLOW_CDU, oldProps, target);
+
+      set(target, prop: string | symbol, value: unknown): boolean {
+        const oldProps = { ...(target as Record<string, unknown>) } as P;
+
+        Reflect.set(target as object, prop, value);
+
+        self.eventBus.emit(Block.EVENTS.FLOW_CDU, oldProps, target);
         return true;
       },
-      deleteProperty: () => {
+
+      deleteProperty(): boolean {
         throw new Error("Нет доступа");
       },
-    });
+    }) as P;
   }
 
   private _createDocumentElement(tagName: string): HTMLElement {
     return document.createElement(tagName);
   }
 
-  // обработчики
   private _addEvents(): void {
     const { events = {} } = this.props;
-
     Object.keys(events).forEach((eventName) => {
       this._element?.addEventListener(eventName, events[eventName]);
     });
@@ -238,7 +250,6 @@ export abstract class Block<P extends BlockProps = BlockProps> {
 
   private _removeEvents(): void {
     const { events = {} } = this.props;
-
     Object.keys(events).forEach((eventName) => {
       this._element?.removeEventListener(eventName, events[eventName]);
     });
@@ -246,26 +257,17 @@ export abstract class Block<P extends BlockProps = BlockProps> {
 
   private _addAttributes(): void {
     const { attr = {} } = this.props;
-
     Object.entries(attr).forEach(([key, value]) => {
       this._element?.setAttribute(key, value);
     });
   }
 
-  // показываем
   public show(): void {
-    const content = this.getContent();
-    if (content) {
-      content.style.display = "block";
-    }
+    this.getContent()!.style.display = "block";
   }
 
-  // скрываем
   public hide(): void {
-    const content = this.getContent();
-    if (content) {
-      content.style.display = "none";
-    }
+    this.getContent()!.style.display = "none";
   }
 
   public getProps(): P {

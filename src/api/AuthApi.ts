@@ -6,7 +6,7 @@ import type {
   User,
 } from "./types";
 
-const authAPI = new HTTPTransport();
+const authAPI = HTTPTransport.getInstance();
 
 export class AuthAPI {
   static signup(data: SignUpRequest): Promise<SignUpResponse> {

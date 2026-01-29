@@ -32,7 +32,17 @@ function queryStringify(
 }
 
 class HTTPTransport {
+  private static instance: HTTPTransport | null = null;
   private apiUrl = "https://ya-praktikum.tech/api/v2";
+
+  private constructor() {}
+
+  public static getInstance(): HTTPTransport {
+    if (!HTTPTransport.instance) {
+      HTTPTransport.instance = new HTTPTransport();
+    }
+    return HTTPTransport.instance;
+  }
 
   public get<R = unknown>(
     url: string,

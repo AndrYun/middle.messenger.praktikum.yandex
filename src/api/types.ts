@@ -53,6 +53,17 @@ export interface SearchUserRequest {
 export interface APIError {
   reason: string;
 }
+// guard для API ошибок
+function isAPIError(error: unknown): error is APIError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "reason" in error &&
+    typeof (error as APIError).reason === "string"
+  );
+}
+
+export default isAPIError;
 
 // Chat API
 export interface Chat {

@@ -6,7 +6,7 @@ import type {
   SearchUserRequest,
 } from "./types";
 
-const userAPI = new HTTPTransport();
+const userAPI = HTTPTransport.getInstance();
 
 export class UserAPI {
   static updateProfile(data: UpdateProfileRequest): Promise<User> {

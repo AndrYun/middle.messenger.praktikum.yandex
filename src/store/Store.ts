@@ -1,12 +1,13 @@
 import type { User } from "../api/types";
 import type { Chat } from "../api/types";
+import { WSMessage } from "../pages/chat/types";
 
 type StoreState = {
   user: User | null;
   isAuthenticated: boolean;
   chats: Chat[];
   selectedChatId: number | null;
-  messages: any[];
+  messages: WSMessage[];
 };
 
 type Listener = () => void;
@@ -31,13 +32,13 @@ export class Store {
   }
 
   // установка сообщения
-  public setMessages(messages: any[]): void {
+  public setMessages(messages: WSMessage[]): void {
     this.setState({ messages });
   }
   // доб одно сообщение
-  public addMessage(message: any): void {
+  public addMessage(message: WSMessage): void {
     this.setState({
-      messages: [...this.state.messages, message].reverse(),
+      messages: [...this.state.messages, message],
     });
   }
   // клининг сообщений

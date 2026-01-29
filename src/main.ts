@@ -45,6 +45,8 @@ const protectedRoutes = [
   "/profile-password",
 ];
 
+const publicOnlyRoutes = ["/", "/sign-up"];
+
 router
   .use("/", LoginPage)
   .use("/sign-up", RegisterPage)
@@ -57,9 +59,15 @@ router
 
 // проверка
 async function checkAuth(): Promise<void> {
+  const currentPath = window.location.pathname;
+
   try {
     const user = await AuthAPI.getUser();
     store.setUser(user);
+
+    if (publicOnlyRoutes.includes(currentPath)) {
+      router.go("/messenger");
+    }
   } catch (error) {
     store.setUser(null);
 

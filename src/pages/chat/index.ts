@@ -1,2 +1,2 @@
 export { ChatPage } from "./chat";
-export type { ChatPageProps, ChatData, MessageData } from "./types";
+export type { ChatPageProps, ChatData } from "./types";

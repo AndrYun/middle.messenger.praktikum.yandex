@@ -34,14 +34,12 @@ export class ProfilePage extends Block<ProfilePageProps> {
 
           store.setUser(updatedUser);
 
-          console.log("✅ Avatar updated:", updatedUser);
-
           // закрываем модалку
           avatarModal.close();
 
           // обновляем страницу чтобы показать новый аватар
           window.router.go("/settings");
-        } catch (error: any) {
+        } catch (error: unknown) {
           alert("Ошибка при загрузке аватара");
         }
       },
@@ -153,14 +151,16 @@ export class ProfilePage extends Block<ProfilePageProps> {
     try {
       await AuthAPI.logout();
       store.setUser(null);
+      store.setChats([]);
+      store.clearMessages();
+      store.selectChat(null);
       window.router.go("/");
-    } catch (error) {
+    } catch (error: unknown) {
       alert(error);
     }
   }
 
   protected componentDidMount(): void {
-    // ✅ Подписываемся на изменения store
     store.subscribe(() => {
       this.updateUserData();
     });

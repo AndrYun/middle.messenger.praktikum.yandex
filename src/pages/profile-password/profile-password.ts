@@ -6,6 +6,7 @@ import template from "./profile-password.hbs?raw";
 import { UserAPI } from "../../api";
 import { Avatar } from "../../components/avatar";
 import { store } from "../../store";
+import isAPIError from "../../api/types";
 
 export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
   constructor(props?: ProfilePasswordPageProps) {
@@ -103,7 +104,6 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
     submitButton.setProps({ disabled: true, text: "Сохранение..." });
 
     try {
-      // ✅ Отправляем запрос на изменение пароля
       await UserAPI.changePassword(data);
 
       if (this.props?.onSubmit) {
@@ -111,12 +111,12 @@ export class ProfilePasswordPage extends Block<ProfilePasswordPageProps> {
       }
       alert("Пароль успешно изменен!");
       window.router.go("/settings");
-    } catch (error: any) {
+    } catch (error: unknown) {
       let errorMessage = "Ошибка при изменении пароля";
 
-      if (error?.reason === "Password is incorrect") {
+      if (isAPIError(error) && error?.reason === "Password is incorrect") {
         errorMessage = "Неверный старый пароль";
-      } else if (error?.reason) {
+      } else if (isAPIError(error) && error?.reason) {
         errorMessage = error.reason;
       }
 

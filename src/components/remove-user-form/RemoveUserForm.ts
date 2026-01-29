@@ -25,8 +25,6 @@ export class RemoveUserForm extends Block<RemoveUserFormProps> {
 
   public async loadUsers(chatId: number): Promise<void> {
     try {
-      console.log("📥 Loading users for chat:", chatId);
-
       // Показываем загрузку
       this.setProps({
         isLoading: true,
@@ -35,9 +33,6 @@ export class RemoveUserForm extends Block<RemoveUserFormProps> {
 
       const users = await ChatAPI.getChatUsers(chatId);
 
-      console.log("✅ Loaded users:", users.length, users);
-
-      // ✅ Создаем UserItem компоненты
       const userItems = users.map(
         (user) =>
           new UserItem({
@@ -56,10 +51,7 @@ export class RemoveUserForm extends Block<RemoveUserFormProps> {
         userList: userItems,
         hasUsers: userItems.length > 0,
       });
-
-      console.log("✅ UserItems created:", userItems.length);
     } catch (error) {
-      console.error("❌ Error loading users:", error);
       this.setProps({
         isLoading: false,
         userList: [],
@@ -71,7 +63,6 @@ export class RemoveUserForm extends Block<RemoveUserFormProps> {
   private handleUserSelect(userId: number): void {
     this.selectedUserId = userId;
 
-    // ✅ Визуально выделяем выбранного пользователя
     const userItems = this.children.userList;
     if (Array.isArray(userItems)) {
       userItems.forEach((item) => {

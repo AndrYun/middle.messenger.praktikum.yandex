@@ -6,9 +6,10 @@ import type { RegisterPageProps, RegisterData } from "./types";
 import template from "./register.hbs?raw";
 import { store } from "../../store/Store";
 import { AuthAPI } from "../../api/AuthApi";
+import isAPIError from "../../api/types";
 
 export class RegisterPage extends Block<RegisterPageProps> {
-  constructor(props: RegisterPageProps) {
+  constructor(props?: RegisterPageProps) {
     super("div", {
       ...props,
       emailInput: new Input({
@@ -104,15 +105,36 @@ export class RegisterPage extends Block<RegisterPageProps> {
     try {
       await AuthAPI.signup(data);
 
+      await AuthAPI.signin({
+        login: data.login,
+        password: data.password,
+      });
+
       const user = await AuthAPI.getUser();
 
       // сохраняем в стор юзера
       store.setUser(user);
 
+      if (this.props.onSubmit) {
+        this.props.onSubmit(data);
+      }
+
       // после успешной регистрации идем в чаты
       window.router.go("/messenger");
-    } catch (error: any) {
-      const errorMessage = error?.reason || "Ошибка регистрации";
+    } catch (error: unknown) {
+      if (isAPIError(error) && error?.reason === "User already in system") {
+        try {
+          const user = await AuthAPI.getUser();
+          store.setUser(user);
+          window.router.go("/messenger");
+          return;
+        } catch (getUserError: unknown) {
+          console.error("Auth has conflicts:", getUserError);
+        }
+      }
+      const errorMessage = isAPIError(error)
+        ? error?.reason
+        : "Ошибка регистрации";
       alert(errorMessage);
     } finally {
       submitButton.setProps({ disabled: false, text: "Create account" });

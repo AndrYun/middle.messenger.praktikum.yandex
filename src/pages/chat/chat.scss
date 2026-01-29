@@ -92,6 +92,14 @@
     margin-bottom: $spacing-lg;
   }
 
+  &__empty-messages {
+    // first init
+    text-align: center;
+    color: $color-text-secondary;
+    padding: $spacing-lg;
+    font-size: $font-size-base;
+  }
+
   &__empty {
     @include flex-center;
 

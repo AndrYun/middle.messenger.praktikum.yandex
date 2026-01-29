@@ -70,6 +70,9 @@ export class WebSocketService {
 
       this.socket.addEventListener("close", () => {
         this.stopPing();
+        this.stopPing();
+        this.socket = null;
+        this.currentChatId = null;
       });
 
       this.socket.addEventListener("error", (event) => {
@@ -121,17 +124,19 @@ export class WebSocketService {
     });
   }
 
-  public sendMessage(content: string): void {
+  public sendMessage(content: string): boolean {
     if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-      return;
+      return false;
     }
 
-    const message = {
-      content,
-      type: "message",
-    };
+    this.socket.send(
+      JSON.stringify({
+        content,
+        type: "message",
+      })
+    );
 
-    this.socket.send(JSON.stringify(message));
+    return true;
   }
 
   private getOldMessages(offset: number = 0): void {
@@ -153,10 +158,17 @@ export class WebSocketService {
 
       if (Array.isArray(data)) {
         store.setMessages(data);
-      } else if (data.type === "pong") {
-        // Ping-pong
-      } else if (data.type === "message" || data.type === "file") {
+        return;
+      }
+
+      if (data.type === "pong") return;
+
+      if (data.type === "message" || data.type === "file") {
         store.addMessage(data);
+
+        window.dispatchEvent(
+          new CustomEvent("newChatMessage", { detail: data })
+        );
       }
     } catch (error) {
       console.error("Error parsing WebSocket message:", error);
@@ -170,6 +182,15 @@ export class WebSocketService {
     return () => {
       this.messageCallbacks.delete(callback);
     };
+  }
+
+  public isConnectedTo(chatId: number): boolean {
+    const ws = this.socket;
+    return (
+      ws !== null &&
+      ws.readyState === WebSocket.OPEN &&
+      this.currentChatId === chatId
+    );
   }
 
   // реализация пинг понга

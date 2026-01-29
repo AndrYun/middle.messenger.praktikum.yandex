@@ -10,7 +10,7 @@ import type {
   SearchUserRequest,
 } from "./types";
 
-const chatAPI = new HTTPTransport();
+const chatAPI = HTTPTransport.getInstance();
 
 export class ChatAPI {
   static getChats(): Promise<Chat[]> {

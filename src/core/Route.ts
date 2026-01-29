@@ -1,14 +1,15 @@
 import type { Block } from "./Block";
+import { BlockConstructor } from "./types";
 
 export class Route {
   private pathname: string;
-  private blockClass: new (props?: any) => Block;
+  private blockClass: BlockConstructor;
   private block: Block | null = null;
   private props: { rootQuery: string };
 
   constructor(
     pathname: string,
-    view: new (props?: any) => Block,
+    view: BlockConstructor,
     props: { rootQuery: string }
   ) {
     this.pathname = pathname;

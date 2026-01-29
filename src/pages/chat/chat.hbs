@@ -21,18 +21,14 @@
   <main class="chat-page__content">
     {{#if selectedChat}}
       <div data-id="chatHeader"></div>
-
       <div data-id="chatMenu"></div>
 
       <section class="chat-page__messages">
         <time class="chat-page__date" datetime="2024-06-19">19 июня</time>
-
         <div data-id="messageList"></div>
       </section>
 
       <div data-id="messageInput"></div>
-
-      <div data-id="addUserModal"></div>
     {{else}}
       <div class="chat-page__empty">
         <p>Выберите чат чтобы отправить сообщение</p>

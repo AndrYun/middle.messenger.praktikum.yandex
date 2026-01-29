@@ -7,6 +7,7 @@ import template from "./profile-edit.hbs?raw";
 import { UserAPI } from "../../api";
 import { store } from "../../store";
 import { Avatar } from "../../components/avatar";
+import isAPIError from "../../api/types";
 
 export class ProfileEditPage extends Block<ProfileEditPageProps> {
   constructor(props?: ProfileEditPageProps) {
@@ -145,8 +146,10 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
       }
       alert("Данные сохранены!");
       window.router.go("/settings");
-    } catch (error: any) {
-      const errorMessage = error?.reason || "Ошибка обновления данных";
+    } catch (error: unknown) {
+      const errorMessage = isAPIError(error)
+        ? error?.reason
+        : "Ошибка обновления данных";
 
       emailInput.setProps({
         error: errorMessage,

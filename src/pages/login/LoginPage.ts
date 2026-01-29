@@ -6,6 +6,7 @@ import type { LoginFormData, LoginPageProps } from "./types";
 import template from "./login.hbs?raw";
 import { AuthAPI } from "../../api/AuthApi";
 import { store } from "../../store/Store";
+import isAPIError from "../../api/types";
 
 export class LoginPage extends Block<LoginPageProps> {
   constructor(props?: LoginPageProps) {
@@ -76,10 +77,26 @@ export class LoginPage extends Block<LoginPageProps> {
       // сохраняем юзера в стор
       store.setUser(user);
 
+      if (this.props.onSubmit) {
+        this.props.onSubmit(data);
+      }
+
       // после успешной авторизации идем в чаты
       window.router.go("/messenger");
-    } catch (error: any) {
-      const errorMessage = error?.reason || "Ошибка авторизации";
+    } catch (error: unknown) {
+      if (isAPIError(error) && error?.reason === "User already in system") {
+        try {
+          const user = await AuthAPI.getUser();
+          store.setUser(user);
+          window.router.go("/messenger");
+          return;
+        } catch (getUserError: unknown) {
+          console.error("Auth has conflicts:", getUserError);
+        }
+      }
+      const errorMessage = isAPIError(error)
+        ? error?.reason
+        : "Ошибка авторизации";
 
       passwordInput.setProps({ error: errorMessage });
     } finally {

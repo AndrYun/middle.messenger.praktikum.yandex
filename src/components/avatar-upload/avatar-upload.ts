@@ -2,6 +2,7 @@ import { Block } from "../../core";
 import { Button } from "../button";
 import type { AvatarUploadProps } from "./types";
 import template from "./avatar-upload.hbs?raw";
+import isAPIError from "../../api/types";
 
 export class AvatarUpload extends Block<AvatarUploadProps> {
   private selectedFile: File | null = null;
@@ -103,8 +104,10 @@ export class AvatarUpload extends Block<AvatarUploadProps> {
       }
 
       this.reset();
-    } catch (error: any) {
-      const errorMessage = error?.reason || "Ошибка при загрузке файла";
+    } catch (error: unknown) {
+      const errorMessage = isAPIError(error)
+        ? error?.reason
+        : "Ошибка при загрузке файла";
       this.setProps({ error: errorMessage });
 
       submitButton.setProps({ disabled: false, text: "Поменять" });

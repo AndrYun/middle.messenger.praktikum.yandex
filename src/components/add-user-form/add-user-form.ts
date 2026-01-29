@@ -72,7 +72,7 @@ export class AddUserForm extends Block<AddUserFormProps> {
         loginInput.setProps({ error: "" });
         console.log("Найден пользователь:", users[0]);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       loginInput.setProps({ error: "Ошибка поиска" });
     } finally {
       searchButton.setProps({ disabled: false, text: "Найти" });

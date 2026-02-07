@@ -1,19 +1,19 @@
-import { Block } from '../../core';
-import { Link } from '../../components/link';
-import type { Error404PageProps } from './types';
-import template from './error-404.hbs?raw';
+import { Block } from "../../core";
+import { Link } from "../../components/link";
+import type { Error404PageProps } from "./types";
+import template from "./error-404.hbs?raw";
 
 export class Error404Page extends Block<Error404PageProps> {
-  constructor(props: Error404PageProps) {
-    super('div', {
+  constructor(props?: Error404PageProps) {
+    super("div", {
       ...props,
       backLink: new Link({
-        text: 'Назад к чатам',
-        href: '#',
-        variant: 'primary',
+        text: "Назад к чатам",
+        href: "#",
+        variant: "primary",
         onClick: (e) => {
           e.preventDefault();
-          window.navigateTo('login');
+          window.router.go("/");
         },
       }),
     });

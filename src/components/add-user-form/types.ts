@@ -1,5 +1,7 @@
-import type { BlockProps } from '../../core';
+import type { BlockProps } from "../../core";
+import type { User } from "../../api/types";
 
 export interface AddUserFormProps extends BlockProps {
-  onSubmit?: (login: string) => void;
+  onSubmit?: (userId: number) => void;
+  foundUser?: User;
 }

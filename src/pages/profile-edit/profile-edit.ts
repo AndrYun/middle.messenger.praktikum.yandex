@@ -1,65 +1,72 @@
 import { Block } from "../../core";
-import { AvatarUpload } from "../../components/avatar-upload";
 import { Input } from "../../components/input";
 import { Button } from "../../components/button";
 import type { ProfileEditPageProps } from "./types";
 import type { ProfileData } from "../profile/types";
 import template from "./profile-edit.hbs?raw";
+import { UserAPI } from "../../api";
+import { store } from "../../store";
+import { Avatar } from "../../components/avatar";
+import isAPIError from "../../api/types";
 
 export class ProfileEditPage extends Block<ProfileEditPageProps> {
-  constructor(props: ProfileEditPageProps) {
-    const defaultData = props.data || {
-      email: "pochta@yandex.ru",
-      login: "ivanivanov",
-      first_name: "Иван",
-      second_name: "Иванов",
-      display_name: "Иван",
-      phone: "+7 (909) 967 30 30",
+  constructor(props?: ProfileEditPageProps) {
+    // берем данные из стора по юзеру
+    const currentUser = store.getState().user;
+    const defaultData = props?.data || {
+      avatar: currentUser?.avatar || "",
+      email: currentUser?.email || "",
+      login: currentUser?.login || "",
+      first_name: currentUser?.first_name || "",
+      second_name: currentUser?.second_name || "",
+      display_name: currentUser?.display_name || "",
+      phone: currentUser?.phone || "",
     };
+    const data = props?.data || defaultData;
 
     super("div", {
       ...props,
-      data: defaultData,
-      avatar: new AvatarUpload({
+      data,
+      profileAvatar: new Avatar({
         size: "large",
-        src: props.data?.avatar,
-        alt: defaultData.first_name,
+        avatar: data.avatar,
+        first_name: data.first_name,
       }),
       emailInput: new Input({
         label: "Почта",
         type: "email",
         name: "email",
-        value: defaultData.email,
+        value: data.email,
       }),
       loginInput: new Input({
         label: "Логин",
         type: "text",
         name: "login",
-        value: defaultData.login,
+        value: data.login,
       }),
       firstNameInput: new Input({
         label: "Имя",
         type: "text",
         name: "first_name",
-        value: defaultData.first_name,
+        value: data.first_name,
       }),
       secondNameInput: new Input({
         label: "Фамилия",
         type: "text",
         name: "second_name",
-        value: defaultData.second_name,
+        value: data.second_name,
       }),
       displayNameInput: new Input({
         label: "Имя в чате",
         type: "text",
         name: "display_name",
-        value: defaultData.display_name,
+        value: data.display_name,
       }),
       phoneInput: new Input({
         label: "Телефон",
         type: "tel",
         name: "phone",
-        value: defaultData.phone,
+        value: data.phone,
       }),
       submitButton: new Button({
         text: "Сохранить",
@@ -80,13 +87,15 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
       return;
     }
 
-    if (target.closest(".profile-page__back")) {
+    const backButton = target.closest(".profile-page__back");
+
+    if (backButton) {
       e.preventDefault();
-      window.navigateTo("profile");
+      window.router.go("/settings");
     }
   }
 
-  private handleSubmit(e: MouseEvent): void {
+  private async handleSubmit(e: MouseEvent): Promise<void> {
     e.preventDefault();
 
     // валидируем все поля
@@ -121,13 +130,32 @@ export class ProfileEditPage extends Block<ProfileEditPageProps> {
       phone: (this.children.phoneInput as Input).getValue(),
     };
 
-    console.log("Profile updated:", data);
+    const submitButton = this.children.submitButton as Button;
+    const emailInput = this.children.emailInput as Input;
 
-    if (this.props.onSubmit) {
-      this.props.onSubmit(data);
-    } else {
+    submitButton.setProps({ disabled: true, text: "Saving..." });
+
+    try {
+      const updatedUser = await UserAPI.updateProfile(data);
+
+      // в стор диспатчим обновленные данные
+      store.setUser(updatedUser);
+
+      if (this.props.onSubmit) {
+        this.props.onSubmit(data);
+      }
       alert("Данные сохранены!");
-      window.navigateTo("profile");
+      window.router.go("/settings");
+    } catch (error: unknown) {
+      const errorMessage = isAPIError(error)
+        ? error?.reason
+        : "Ошибка обновления данных";
+
+      emailInput.setProps({
+        error: errorMessage,
+      });
+    } finally {
+      submitButton.setProps({ disabled: false, text: "Сохранить" });
     }
   }
 

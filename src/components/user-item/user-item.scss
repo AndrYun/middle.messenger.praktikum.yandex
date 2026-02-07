@@ -1,0 +1,47 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.user-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm;
+  border: 1px solid $color-border;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color $transition-base;
+
+  &:hover {
+    background-color: rgba($color-primary, 0.05);
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-weight: 500;
+    font-size: $font-size-base;
+  }
+
+  &__login {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+  }
+
+  &__role {
+    font-size: $font-size-sm;
+    color: $color-primary;
+    margin-top: 2px;
+  }
+
+  &--selected {
+    background-color: rgba($color-primary, 0.1);
+    border-color: $color-primary;
+  }
+}

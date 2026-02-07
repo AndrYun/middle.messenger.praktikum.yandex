@@ -1,7 +1,7 @@
-import type { BlockProps, Block } from '../../core';
+import type { BlockProps } from "../../core";
 
 export interface ChatHeaderProps extends BlockProps {
   name: string;
-  avatar?: Block;
+  avatar?: string | null;
   onMenuClick?: () => void;
 }

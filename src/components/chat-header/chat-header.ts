@@ -7,15 +7,25 @@ export class ChatHeader extends Block<ChatHeaderProps> {
   constructor(props: ChatHeaderProps) {
     super("div", {
       ...props,
-      avatar:
-        props.avatar ||
-        new Avatar({
-          size: "small",
-          alt: props.name,
-        }),
+      // avatar: new Avatar({
+      //   avatar: props.avatar,
+      //   size: "small",
+      //   first_name: props.name,
+      // }),
+      attr: {
+        class: "chat-header",
+      },
       events: {
         click: (e: Event) => this.handleClick(e),
       },
+    });
+
+    this.setProps({
+      avatarComponent: new Avatar({
+        avatar: props.avatar || undefined,
+        size: "small",
+        firstName: props.name,
+      }),
     });
   }
 

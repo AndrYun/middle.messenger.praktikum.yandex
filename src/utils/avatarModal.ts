@@ -43,7 +43,6 @@ export function initAvatarModal(): void {
       showError("Нужно выбрать файл");
     } else {
       // Здесь будет отправка файла на сервер
-      console.log("Файл выбран:", fileInput.files[0].name);
       closeModal();
     }
   });

@@ -1,4 +1,5 @@
-import type { BlockProps } from '../../core';
+import type { BlockProps } from "../../core";
+import type { Chat } from "../../api";
 
 export interface ChatData {
   id: number;
@@ -10,18 +11,19 @@ export interface ChatData {
   isYou?: boolean;
 }
 
-export interface MessageData {
-  id: number;
-  text?: string;
-  time: string;
-  isMy: boolean;
-  image?: string;
-  [key: string]: unknown;
-}
-
 export interface ChatPageProps extends BlockProps {
-  chats?: ChatData[];
+  chats?: Chat[];
   selectedChatId?: number;
+  selectedChat?: Chat | null;
   onChatSelect?: (chatId: number) => void;
   onMessageSend?: (message: string) => void;
+}
+
+export interface WSMessage {
+  id: number;
+  user_id: number;
+  chat_id: number;
+  type: string;
+  time: string;
+  content: string;
 }

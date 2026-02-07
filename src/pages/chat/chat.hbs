@@ -1,41 +1,42 @@
-<div class='chat-page'>
-  <aside class='chat-page__sidebar'>
-    <header class='chat-page__sidebar-header'>
-      <a href='#' class='chat-page__profile-link'>Профиль →</a>
+<div class="chat-page">
+  <aside class="chat-page__sidebar">
+    <header class="chat-page__sidebar-header">
+      <a href="#" class="chat-page__profile-link">Профиль →</a>
+      <div data-id="createChatButton" class="chat-page__create-chat"></div>
     </header>
 
-    <div class='chat-page__search'>
+    <div class="chat-page__search">
       <input
-        type='search'
-        placeholder='Поиск'
-        class='chat-page__search-input'
+        type="search"
+        placeholder="Поиск"
+        class="chat-page__search-input"
       />
     </div>
 
-    <nav class='chat-page__chats'>
-      <div data-id='chatList'></div>
+    <nav class="chat-page__chats">
+      <div data-id="chatList"></div>
     </nav>
   </aside>
 
-  <main class='chat-page__content'>
+  <main class="chat-page__content">
     {{#if selectedChat}}
-      <div data-id='chatHeader'></div>
+      <div data-id="chatHeader"></div>
+      <div data-id="chatMenu"></div>
 
-      <div data-id='chatMenu'></div>
-
-      <section class='chat-page__messages'>
-        <time class='chat-page__date' datetime='2024-06-19'>19 июня</time>
-
-        <div data-id='messageList'></div>
+      <section class="chat-page__messages">
+        <time class="chat-page__date" datetime="2024-06-19">19 июня</time>
+        <div data-id="messageList"></div>
       </section>
 
-      <div data-id='messageInput'></div>
-
-      <div data-id='addUserModal'></div>
+      <div data-id="messageInput"></div>
     {{else}}
-      <div class='chat-page__empty'>
+      <div class="chat-page__empty">
         <p>Выберите чат чтобы отправить сообщение</p>
       </div>
     {{/if}}
   </main>
+
+  <div data-id="addUserModal"></div>
+  <div data-id="createChatModal"></div>
+  <div data-id="removeUserModal"></div>
 </div>

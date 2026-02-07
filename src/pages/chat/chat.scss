@@ -17,6 +17,18 @@
   &__sidebar-header {
     padding: $spacing-md $spacing-lg;
     border-bottom: 1px solid $color-border;
+    gap: $spacing-sm;
+  }
+
+  &__create-chat {
+    flex-shrink: 0;
+  }
+
+  &__empty-chats {
+    padding: $spacing-lg;
+    text-align: center;
+    color: $color-text-secondary;
+    font-size: $font-size-sm;
   }
 
   &__profile-link {
@@ -69,6 +81,7 @@
     background-color: #fff;
     display: flex;
     flex-direction: column;
+    scroll-behavior: smooth;
   }
 
   &__date {
@@ -77,6 +90,14 @@
     color: $color-text-secondary;
     font-size: $font-size-sm;
     margin-bottom: $spacing-lg;
+  }
+
+  &__empty-messages {
+    // first init
+    text-align: center;
+    color: $color-text-secondary;
+    padding: $spacing-lg;
+    font-size: $font-size-base;
   }
 
   &__empty {

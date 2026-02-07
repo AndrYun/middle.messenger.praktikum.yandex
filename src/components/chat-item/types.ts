@@ -1,4 +1,4 @@
-import type { BlockProps, Block } from '../../core';
+import type { Block, BlockProps } from "../../core";
 
 export interface ChatItemProps extends BlockProps {
   id: number;
@@ -8,6 +8,7 @@ export interface ChatItemProps extends BlockProps {
   unreadCount?: number;
   active?: boolean;
   isYou?: boolean;
-  avatar?: Block;
+  avatar?: string | null;
+  avatarComponent?: Block;
   onClick?: (id: number) => void;
 }

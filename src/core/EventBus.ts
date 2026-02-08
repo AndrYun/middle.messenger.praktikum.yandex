@@ -15,11 +15,11 @@ export class EventBus {
 
   off<T extends unknown[]>(event: string, callback: Listener<T>): void {
     if (!this.listeners[event]) {
-      throw new Error(`Нет события: ${event}`);
+      return;
     }
 
     this.listeners[event] = this.listeners[event].filter(
-      (listener) => listener !== callback,
+      (listener) => listener !== callback
     );
   }
 

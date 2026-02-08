@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 1) линтеры/фиксы для staged файлов 
+npx lint-staged
+
+# 2) типы (чтобы не закоммитить то, что не соберётся)
+npm run type-check
+
+# 3) тесты 
+npm test

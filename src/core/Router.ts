@@ -39,6 +39,12 @@ export class Router {
     if (!route) {
       const notFoundRoute = this.getRoute("/404");
       if (notFoundRoute) {
+        if (window.location.pathname !== "/404") {
+          this.history.replaceState({}, "", "/404");
+        }
+        if (this.currentRoute && this.currentRoute !== notFoundRoute) {
+          this.currentRoute.leave();
+        }
         this.currentRoute = notFoundRoute;
         notFoundRoute.render();
       }

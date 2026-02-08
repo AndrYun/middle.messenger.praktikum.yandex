@@ -13,24 +13,44 @@
     "lint:ts:fix": "eslint \"src/**/*.ts\" --fix --max-warnings 50",
     "lint:style": "stylelint \"src/**/*.scss\"",
     "lint:style:fix": "stylelint \"src/**/*.scss\" --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "jest --config jest.config.cjs",
+    "test:watch": "jest --watch --config jest.config.cjs",
+    "test:coverage": "jest --coverage --config jest.config.cjs",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@types/node": "^20.0.0",
     "eslint": "^8.56.0",
+    "husky": "^9.1.7",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^28.0.0",
+    "lint-staged": "^16.2.7",
     "sass": "^1.69.0",
     "stylelint": "^15.11.0",
     "stylelint-config-standard-scss": "^11.1.0",
     "stylelint-order": "^6.0.3",
     "stylelint-scss": "^5.3.0",
+    "ts-jest": "^29.4.6",
     "typescript": "~5.3.0",
     "vite": "^4.5.0"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --fix --max-warnings 0"
+    ],
+    "src/**/*.scss": [
+      "stylelint --fix"
+    ]
   },
   "dependencies": {
     "handlebars": "^4.7.8",

@@ -1,12 +1,12 @@
-import { Block } from '../../core';
-import type { ButtonProps } from './types';
-import template from './button.hbs?raw';
+import { Block } from "../../core";
+import type { ButtonProps } from "./types";
+import template from "./button.hbs?raw";
 
 export class Button extends Block<ButtonProps> {
   constructor(props: ButtonProps) {
-    super('div', {
+    super("div", {
       ...props,
-      type: props.type || 'button',
+      type: props.type || "button",
       events: {
         click: (e: Event) => {
           if (props.onClick) {
